@@ -14,6 +14,12 @@ Tambahkan melalui **Settings → Secrets and variables → Actions → New repos
 | Secret | Keterangan |
 | ------ | ---------- |
 | `ECS_SSH_KEY` | Private key SSH (format PEM) yang dipakai untuk mengakses instance ECS. Pastikan public key-nya sudah ditambahkan ke server. |
+| `SECRET_KEY` | Nilai `secret_key` untuk konfigurasi aplikasi. |
+| `DATABASE_URL` | URL koneksi database PostgreSQL. |
+| `EMAIL_SENDER` | Email default pengirim notifikasi. |
+| `EMAIL_SENDER_NAME` | (Opsional) Nama pengirim email. |
+| `BASE_URL` | (Opsional) Basis URL aplikasi untuk tautan publik. |
+| `TIMEZONE` | (Opsional) Zona waktu default, mis. `Asia/Jakarta`. |
 
 ### Variables
 Tambahkan melalui **Settings → Secrets and variables → Actions → Variables**:

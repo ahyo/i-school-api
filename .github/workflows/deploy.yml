@@ -46,6 +46,12 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ECS_SSH_PORT: ${{ secrets.ECS_SSH_PORT }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
+      EMAIL_SENDER_NAME: ${{ secrets.EMAIL_SENDER_NAME }}
+      BASE_URL: ${{ secrets.BASE_URL }}
+      TIMEZONE: ${{ secrets.TIMEZONE }}
 
     steps:
       - name: Checkout repository
@@ -69,11 +75,19 @@ jobs:
           username: ${{ env.ECS_USER }}
           key: ${{ secrets.ECS_SSH_KEY }}
           port: ${{ env.ECS_SSH_PORT || 22 }}
-          envs: REMOTE_PATH,RESTART_COMMAND
+          envs: REMOTE_PATH,RESTART_COMMAND,SECRET_KEY,DATABASE_URL,EMAIL_SENDER,EMAIL_SENDER_NAME,BASE_URL,TIMEZONE
           script: |
             set -e
             mkdir -p "$REMOTE_PATH"
             cd "$REMOTE_PATH"
+            cat <<'EOF' > .env
+            SECRET_KEY=${SECRET_KEY}
+            DATABASE_URL=${DATABASE_URL}
+            EMAIL_SENDER=${EMAIL_SENDER}
+            EMAIL_SENDER_NAME=${EMAIL_SENDER_NAME:-SI Sekolah}
+            BASE_URL=${BASE_URL:-http://localhost:8000}
+            TIMEZONE=${TIMEZONE:-Asia/Jakarta}
+            EOF
             python3 -m venv .venv
             . .venv/bin/activate
             pip install --upgrade pip
