@@ -9,6 +9,7 @@
 
 ## Menjalankan Lokal
 - Install dependensi: `pip install -r requirements.txt`
+- Jalankan migrasi database: `alembic upgrade head`
 - Jalankan server dev: `uvicorn app.main:app --reload`
 
 ## Alur Utama

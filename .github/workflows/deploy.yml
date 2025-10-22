@@ -11,10 +11,10 @@ on:
 
 env:
   PYTHON_VERSION: "3.11"
-  ECS_HOST: ${{ vars.ECS_HOST }}
-  ECS_USER: ${{ vars.ECS_USER }}
-  REMOTE_PATH: ${{ vars.REMOTE_PATH }}
-  RESTART_COMMAND: ${{ vars.RESTART_COMMAND }}
+  ECS_HOST: ${{ secrets.ECS_HOST }}
+  ECS_USER: ${{ secrets.ECS_USER }}
+  REMOTE_PATH: ${{ secrets.REMOTE_PATH }}
+  RESTART_COMMAND: ${{ secrets.RESTART_COMMAND }}
   IMAGE_TAG: ${{ github.sha }}
 
 jobs:
@@ -45,7 +45,7 @@ jobs:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     env:
-      ECS_SSH_PORT: ${{ vars.ECS_SSH_PORT }}
+      ECS_SSH_PORT: ${{ secrets.ECS_SSH_PORT }}
 
     steps:
       - name: Checkout repository
@@ -64,10 +64,10 @@ jobs:
       - name: Deploy to Alibaba Cloud ECS
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ env.ECS_HOST }}
-          username: ${{ env.ECS_USER }}
+          host: ${{ secrets.ECS_HOST }}
+          username: ${{ secrets.ECS_USER }}
           key: ${{ secrets.ECS_SSH_KEY }}
-          port: ${{ env.ECS_SSH_PORT != '' && env.ECS_SSH_PORT || 22 }}
+          port: ${{ secrets.ECS_SSH_PORT != '' && secrets.ECS_SSH_PORT || 22 }}
           envs: REMOTE_PATH,RESTART_COMMAND
           script: |
             set -e
@@ -78,6 +78,9 @@ jobs:
             pip install --upgrade pip
             if [ -f requirements.txt ]; then
               pip install -r requirements.txt
+            fi
+            if [ -f alembic.ini ]; then
+              .venv/bin/alembic upgrade head
             fi
             if [ -n "$RESTART_COMMAND" ]; then
               eval "$RESTART_COMMAND"
