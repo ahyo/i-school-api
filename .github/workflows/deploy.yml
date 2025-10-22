@@ -39,9 +39,14 @@ jobs:
       - name: Static compilation check
         run: python -m compileall app
 
-    deploy:
+  deploy:
+    name: Build Image & Deploy
+    needs: build-test
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
     env:
       ECS_SSH_PORT: ${{ secrets.ECS_SSH_PORT }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
