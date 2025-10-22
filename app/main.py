@@ -4,7 +4,6 @@ from app.api import api_router
 from app.core.config import settings
 
 
-# update
 def create_app() -> FastAPI:
     app = FastAPI(
         title=settings.app_nama,
