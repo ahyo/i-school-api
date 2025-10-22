@@ -80,14 +80,6 @@ jobs:
             set -e
             mkdir -p "$REMOTE_PATH"
             cd "$REMOTE_PATH"
-            cat <<'EOF' > .env
-            SECRET_KEY=${SECRET_KEY}
-            DATABASE_URL=${DATABASE_URL}
-            EMAIL_SENDER=${EMAIL_SENDER}
-            EMAIL_SENDER_NAME=${EMAIL_SENDER_NAME:-SI Sekolah}
-            BASE_URL=${BASE_URL:-http://localhost:8000}
-            TIMEZONE=${TIMEZONE:-Asia/Jakarta}
-            EOF
             python3 -m venv .venv
             . .venv/bin/activate
             pip install --upgrade pip
