@@ -25,7 +25,9 @@ def upgrade() -> None:
     )
     status_guru = sa.Enum("aktif", "tidak_aktif", "cuti", name="statusguru")
     jenis_kelamin = sa.Enum("laki_laki", "perempuan", name="jeniskelamin")
-    jenjang_sekolah = sa.Enum("SD", "SMP", "SMA", "SMK", name="jenjangsekolah")
+    jenjang_sekolah = sa.Enum(
+        "SD", "SMP", "SMA", "SMK", name="jenjangsekolah", create_type=False
+    )
     status_sekolah = sa.Enum("negeri", "swasta", name="statussekolah")
     kelompok_mapel = sa.Enum(
         "umum", "keahlian", "muatan_lokal", "tambahan", name="kelompokmatapelajaran"
@@ -41,9 +43,7 @@ def upgrade() -> None:
     status_kehadiran = sa.Enum(
         "hadir", "sakit", "izin", "alfa", "terlambat", name="statuskehadiran"
     )
-    status_kenaikan = sa.Enum(
-        "naik", "tinggal", "mutasi_keluar", name="statuskenaikan"
-    )
+    status_kenaikan = sa.Enum("naik", "tinggal", "mutasi_keluar", name="statuskenaikan")
     jenis_pembayaran = sa.Enum(
         "spp",
         "daftar_ulang",
@@ -94,7 +94,12 @@ def upgrade() -> None:
         sa.Column("kepala_sekolah", sa.String(length=150)),
         sa.Column("tanggal_berdiri", sa.DateTime(timezone=True)),
         sa.Column("deskripsi", sa.String(length=500)),
-        sa.Column("status_verifikasi", sa.Boolean(), nullable=False, server_default=sa.text("false")),
+        sa.Column(
+            "status_verifikasi",
+            sa.Boolean(),
+            nullable=False,
+            server_default=sa.text("false"),
+        ),
         sa.Column("dibuat_pada", sa.DateTime(timezone=True), nullable=False),
         sa.Column("diperbarui_pada", sa.DateTime(timezone=True), nullable=False),
         sa.UniqueConstraint("npsn", name="uq_sekolah_npsn"),
@@ -105,11 +110,20 @@ def upgrade() -> None:
         sa.Column("id", sa.String(), primary_key=True),
         sa.Column("nama_lengkap", sa.String(length=150), nullable=False),
         sa.Column("email", sa.String(length=150), nullable=False),
-        sa.Column("email_terverifikasi", sa.Boolean(), nullable=False, server_default=sa.text("false")),
+        sa.Column(
+            "email_terverifikasi",
+            sa.Boolean(),
+            nullable=False,
+            server_default=sa.text("false"),
+        ),
         sa.Column("kata_sandi_hash", sa.String(length=255), nullable=False),
         sa.Column("peran", peran_pengguna, nullable=False),
-        sa.Column("sekolah_id", sa.String(), sa.ForeignKey("sekolah.id", ondelete="SET NULL")),
-        sa.Column("status_aktif", sa.Boolean(), nullable=False, server_default=sa.text("true")),
+        sa.Column(
+            "sekolah_id", sa.String(), sa.ForeignKey("sekolah.id", ondelete="SET NULL")
+        ),
+        sa.Column(
+            "status_aktif", sa.Boolean(), nullable=False, server_default=sa.text("true")
+        ),
         sa.UniqueConstraint("email", name="uq_pengguna_email"),
     )
     op.create_index("ix_pengguna_email", "pengguna", ["email"])
@@ -120,7 +134,9 @@ def upgrade() -> None:
         sa.Column("pengguna_id", sa.String(), nullable=False),
         sa.Column("token", sa.String(length=255), nullable=False),
         sa.Column("kedaluwarsa", sa.DateTime(timezone=True), nullable=False),
-        sa.Column("digunakan", sa.Boolean(), nullable=False, server_default=sa.text("false")),
+        sa.Column(
+            "digunakan", sa.Boolean(), nullable=False, server_default=sa.text("false")
+        ),
         sa.ForeignKeyConstraint(
             ["pengguna_id"],
             ["pengguna.id"],
@@ -147,7 +163,12 @@ def upgrade() -> None:
         sa.Column("nomor_telepon", sa.String(length=25)),
         sa.Column("alamat", sa.String(length=255)),
         sa.Column("mata_pelajaran_utama", sa.String(length=100)),
-        sa.Column("status_guru", status_guru, nullable=False, server_default=sa.text("'aktif'")),
+        sa.Column(
+            "status_guru",
+            status_guru,
+            nullable=False,
+            server_default=sa.text("'aktif'"),
+        ),
         sa.ForeignKeyConstraint(
             ["pengguna_id"],
             ["pengguna.id"],
@@ -166,10 +187,14 @@ def upgrade() -> None:
         sa.Column("sekolah_id", sa.String(), nullable=False),
         sa.Column("kode_mapel", sa.String(length=20)),
         sa.Column("nama_mapel", sa.String(length=150), nullable=False),
-        sa.Column("kelompok", kelompok_mapel, nullable=False, server_default=sa.text("'umum'")),
+        sa.Column(
+            "kelompok", kelompok_mapel, nullable=False, server_default=sa.text("'umum'")
+        ),
         sa.Column("tingkat_minimal", sa.Integer()),
         sa.Column("tingkat_maksimal", sa.Integer()),
-        sa.Column("status_aktif", sa.Boolean(), nullable=False, server_default=sa.text("true")),
+        sa.Column(
+            "status_aktif", sa.Boolean(), nullable=False, server_default=sa.text("true")
+        ),
         sa.ForeignKeyConstraint(
             ["sekolah_id"],
             ["sekolah.id"],
@@ -185,7 +210,9 @@ def upgrade() -> None:
         sa.Column("tanggal_mulai", sa.Date(), nullable=False),
         sa.Column("tanggal_selesai", sa.Date(), nullable=False),
         sa.Column("semester_awal", semester_enum, nullable=False),
-        sa.Column("aktif", sa.Boolean(), nullable=False, server_default=sa.text("false")),
+        sa.Column(
+            "aktif", sa.Boolean(), nullable=False, server_default=sa.text("false")
+        ),
         sa.ForeignKeyConstraint(
             ["sekolah_id"],
             ["sekolah.id"],
@@ -210,7 +237,12 @@ def upgrade() -> None:
         sa.Column("nama_ayah", sa.String(length=150)),
         sa.Column("nama_ibu", sa.String(length=150)),
         sa.Column("wali_murid", sa.String(length=150)),
-        sa.Column("status_siswa", status_siswa, nullable=False, server_default=sa.text("'aktif'")),
+        sa.Column(
+            "status_siswa",
+            status_siswa,
+            nullable=False,
+            server_default=sa.text("'aktif'"),
+        ),
         sa.Column("tanggal_diterima", sa.Date()),
         sa.Column("catatan", sa.String(length=500)),
         sa.Column("dibuat_pada", sa.DateTime(timezone=True), nullable=False),
@@ -256,7 +288,12 @@ def upgrade() -> None:
         sa.Column("id", sa.String(), primary_key=True),
         sa.Column("siswa_id", sa.String(), nullable=False),
         sa.Column("kelas_id", sa.String(), nullable=False),
-        sa.Column("status_keanggotaan", status_keanggotaan, nullable=False, server_default=sa.text("'aktif'")),
+        sa.Column(
+            "status_keanggotaan",
+            status_keanggotaan,
+            nullable=False,
+            server_default=sa.text("'aktif'"),
+        ),
         sa.Column("tanggal_masuk", sa.Date()),
         sa.Column("tanggal_keluar", sa.Date()),
         sa.ForeignKeyConstraint(
@@ -304,11 +341,26 @@ def upgrade() -> None:
         sa.Column("deskripsi", sa.Text()),
         sa.Column("periode_bulan", sa.Integer()),
         sa.Column("periode_tahun", sa.Integer()),
-        sa.Column("tanggal_tagihan", sa.Date(), nullable=False, server_default=sa.text("CURRENT_DATE")),
+        sa.Column(
+            "tanggal_tagihan",
+            sa.Date(),
+            nullable=False,
+            server_default=sa.text("CURRENT_DATE"),
+        ),
         sa.Column("tanggal_jatuh_tempo", sa.Date()),
         sa.Column("jumlah_tagihan", sa.Numeric(14, 2), nullable=False),
-        sa.Column("jumlah_terbayar", sa.Numeric(14, 2), nullable=False, server_default=sa.text("0.00")),
-        sa.Column("status_tagihan", status_tagihan, nullable=False, server_default=sa.text("'belum_dibayar'")),
+        sa.Column(
+            "jumlah_terbayar",
+            sa.Numeric(14, 2),
+            nullable=False,
+            server_default=sa.text("0.00"),
+        ),
+        sa.Column(
+            "status_tagihan",
+            status_tagihan,
+            nullable=False,
+            server_default=sa.text("'belum_dibayar'"),
+        ),
         sa.Column("tanggal_lunas", sa.Date()),
         sa.Column("dibuat_pada", sa.DateTime(timezone=True), nullable=False),
         sa.Column("diperbarui_pada", sa.DateTime(timezone=True), nullable=False),
@@ -460,7 +512,12 @@ def upgrade() -> None:
         sa.Column("jumlah", sa.Numeric(14, 2), nullable=False),
         sa.Column("tanggal_jatuh_tempo", sa.Date()),
         sa.Column("tanggal_bayar", sa.Date()),
-        sa.Column("status_pembayaran", status_pembayaran, nullable=False, server_default=sa.text("'menunggu'")),
+        sa.Column(
+            "status_pembayaran",
+            status_pembayaran,
+            nullable=False,
+            server_default=sa.text("'menunggu'"),
+        ),
         sa.Column("metode_pembayaran", sa.String(length=50)),
         sa.Column("bukti_pembayaran_url", sa.String(length=255)),
         sa.Column("keterangan", sa.Text()),
