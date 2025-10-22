@@ -3,13 +3,13 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    app_nama: str = "SI Sekolah"
+    app_nama: str = "Sistem Sekolah Online"
     app_env: str = "dev"
     secret_key: str
     access_token_expire_minutes: int = 120
     database_url: str
-    email_sender: EmailStr
-    email_sender_name: str = "SI Sekolah"
+    email_sender: str = "ahyo.haryanto@gmail.com"
+    email_sender_name: str = "Sistem Sekolah Online"
     base_url: str = "http://localhost:8000"
     timezone: str = "Asia/Jakarta"
 
