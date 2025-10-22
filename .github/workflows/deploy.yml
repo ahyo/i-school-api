@@ -39,14 +39,9 @@ jobs:
       - name: Static compilation check
         run: python -m compileall app
 
-  deploy:
-    name: Build Image & Deploy
-    needs: build-test
-    if: github.event_name != 'pull_request'
-    runs-on: ubuntu-latest
+    deploy:
     env:
       ECS_SSH_PORT: ${{ secrets.ECS_SSH_PORT }}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -59,13 +54,14 @@ jobs:
           remote_path: ${{ env.REMOTE_PATH }}
           remote_host: ${{ env.ECS_HOST }}
           remote_user: ${{ env.ECS_USER }}
+          remote_port: ${{ env.ECS_SSH_PORT || 22 }}
           remote_key: ${{ secrets.ECS_SSH_KEY }}
 
       - name: Deploy to Alibaba Cloud ECS
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ secrets.ECS_HOST }}
-          username: ${{ secrets.ECS_USER }}
+          host: ${{ env.ECS_HOST }}
+          username: ${{ env.ECS_USER }}
           key: ${{ secrets.ECS_SSH_KEY }}
           port: ${{ env.ECS_SSH_PORT || 22 }}
           envs: REMOTE_PATH,RESTART_COMMAND
