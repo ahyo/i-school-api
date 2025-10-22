@@ -79,3 +79,4 @@ class Sekolah(Base):
     absensi = relationship("AbsensiSiswa", back_populates="sekolah")
     nilai = relationship("Nilai", back_populates="sekolah")
     tagihan = relationship("Tagihan", back_populates="sekolah")
+    konten_website = relationship("WebsiteKonten", back_populates="sekolah")

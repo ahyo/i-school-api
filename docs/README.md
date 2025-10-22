@@ -24,6 +24,7 @@
 - **Tagihan SPP & Tagihan Lainnya**: Admin/keuangan membuat tagihan bulanan atau khusus serta memantau statusnya via `/tagihan`.
 - **Pembayaran**: Admin/keuangan mencatat dan memperbarui transaksi pembayaran `(/pembayaran)` yang otomatis mengupdate tagihan terkait.
 - **Laporan Pembayaran**: Rekap tagihan vs pembayaran per bulan/tahun melalui `/laporan/pembayaran`.
+- **Website Sekolah**: Admin mengelola berita, pengumuman, dan kegiatan melalui `/website/konten` serta menyediakan endpoint publik `/website/public`.
 
 Semua endpoint daftar (guru, siswa, kelas, mata pelajaran, tahun ajaran, nilai, absensi, tagihan, pembayaran) mendukung query parameter `page` dan `limit` untuk pagination (default `page=1`, `limit=20`).
 

@@ -32,3 +32,4 @@ class Pengguna(Base):
 
     sekolah = relationship("Sekolah", back_populates="pengguna")
     guru = relationship("Guru", back_populates="pengguna", uselist=False)
+    konten_dibuat = relationship("WebsiteKonten", back_populates="penulis")
