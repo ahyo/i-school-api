@@ -16,6 +16,7 @@ depends_on = None
 
 
 def upgrade() -> None:
+    enum_kwargs = {"native_enum": False}
     jenis_konten = sa.Enum(
         "berita",
         "kegiatan",
@@ -23,15 +24,15 @@ def upgrade() -> None:
         "prestasi",
         "lainnya",
         name="jeniskonten",
+        **enum_kwargs,
     )
     status_konten = sa.Enum(
         "draft",
         "terbit",
         "arsip",
         name="statuskonten",
+        **enum_kwargs,
     )
-    jenis_konten.create(op.get_bind(), checkfirst=True)
-    status_konten.create(op.get_bind(), checkfirst=True)
 
     op.create_table(
         "website_konten",
@@ -76,5 +77,3 @@ def upgrade() -> None:
 def downgrade() -> None:
     op.drop_index("ix_website_konten_slug", table_name="website_konten")
     op.drop_table("website_konten")
-    sa.Enum(name="statuskonten").drop(op.get_bind(), checkfirst=True)
-    sa.Enum(name="jeniskonten").drop(op.get_bind(), checkfirst=True)

@@ -34,7 +34,9 @@ class TahunAjaran(Base):
     nama_tahun: Mapped[str] = mapped_column(String(20), nullable=False)
     tanggal_mulai: Mapped[date] = mapped_column(Date, nullable=False)
     tanggal_selesai: Mapped[date] = mapped_column(Date, nullable=False)
-    semester_awal: Mapped[Semester] = mapped_column(Enum(Semester), nullable=False)
+    semester_awal: Mapped[Semester] = mapped_column(
+        Enum(Semester, native_enum=False), nullable=False
+    )
     aktif: Mapped[bool] = mapped_column(Boolean, default=False)
 
     sekolah = relationship("Sekolah", back_populates="tahun_ajaran")
@@ -136,9 +138,11 @@ class Nilai(Base):
     tahun_ajaran_id: Mapped[str] = mapped_column(
         String, ForeignKey("tahun_ajaran.id", ondelete="CASCADE"), nullable=False
     )
-    semester: Mapped[Semester] = mapped_column(Enum(Semester), nullable=False)
+    semester: Mapped[Semester] = mapped_column(
+        Enum(Semester, native_enum=False), nullable=False
+    )
     tipe_penilaian: Mapped[TipePenilaian] = mapped_column(
-        Enum(TipePenilaian), nullable=False
+        Enum(TipePenilaian, native_enum=False), nullable=False
     )
     nilai_angka: Mapped[Decimal | None] = mapped_column(Numeric(5, 2))
     nilai_huruf: Mapped[str | None] = mapped_column(String(5))
@@ -181,7 +185,7 @@ class AbsensiSiswa(Base):
     )
     tanggal: Mapped[date] = mapped_column(Date, nullable=False)
     status_kehadiran: Mapped[StatusKehadiran] = mapped_column(
-        Enum(StatusKehadiran), nullable=False
+        Enum(StatusKehadiran, native_enum=False), nullable=False
     )
     keterangan: Mapped[str | None] = mapped_column(Text)
     dicatat_oleh_id: Mapped[str | None] = mapped_column(
@@ -228,7 +232,7 @@ class KenaikanKelas(Base):
         String, ForeignKey("tahun_ajaran.id", ondelete="CASCADE"), nullable=False
     )
     status_kenaikan: Mapped[StatusKenaikan] = mapped_column(
-        Enum(StatusKenaikan), nullable=False
+        Enum(StatusKenaikan, native_enum=False), nullable=False
     )
     tanggal_keputusan: Mapped[date | None] = mapped_column(Date)
     catatan: Mapped[str | None] = mapped_column(Text)

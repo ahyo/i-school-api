@@ -33,13 +33,13 @@ class Guru(Base):
     tempat_lahir: Mapped[str | None] = mapped_column(String(100))
     tanggal_lahir: Mapped[date | None] = mapped_column(Date)
     jenis_kelamin: Mapped[JenisKelamin | None] = mapped_column(
-        Enum(JenisKelamin), nullable=True
+        Enum(JenisKelamin, native_enum=False), nullable=True
     )
     nomor_telepon: Mapped[str | None] = mapped_column(String(25))
     alamat: Mapped[str | None] = mapped_column(String(255))
     mata_pelajaran_utama: Mapped[str | None] = mapped_column(String(100))
     status_guru: Mapped[StatusGuru] = mapped_column(
-        Enum(StatusGuru), nullable=False, default=StatusGuru.aktif
+        Enum(StatusGuru, native_enum=False), nullable=False, default=StatusGuru.aktif
     )
 
     pengguna = relationship("Pengguna", back_populates="guru")

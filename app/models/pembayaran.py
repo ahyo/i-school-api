@@ -50,7 +50,7 @@ class Tagihan(Base):
         String, ForeignKey("siswa.id", ondelete="CASCADE"), nullable=False
     )
     jenis_tagihan: Mapped[JenisPembayaran] = mapped_column(
-        Enum(JenisPembayaran), nullable=False
+        Enum(JenisPembayaran, native_enum=False), nullable=False
     )
     nama_tagihan: Mapped[str] = mapped_column(String(150), nullable=False)
     deskripsi: Mapped[str | None] = mapped_column(Text)
@@ -63,7 +63,7 @@ class Tagihan(Base):
         Numeric(14, 2), nullable=False, default=Decimal("0.00")
     )
     status_tagihan: Mapped[StatusTagihan] = mapped_column(
-        Enum(StatusTagihan), nullable=False, default=StatusTagihan.belum_dibayar
+        Enum(StatusTagihan, native_enum=False), nullable=False, default=StatusTagihan.belum_dibayar
     )
     tanggal_lunas: Mapped[date | None] = mapped_column(Date)
     dibuat_pada: Mapped[datetime] = mapped_column(
@@ -101,7 +101,7 @@ class Pembayaran(Base):
         String, ForeignKey("tagihan.id", ondelete="SET NULL")
     )
     jenis_pembayaran: Mapped[JenisPembayaran] = mapped_column(
-        Enum(JenisPembayaran), nullable=False
+        Enum(JenisPembayaran, native_enum=False), nullable=False
     )
     deskripsi: Mapped[str | None] = mapped_column(Text)
     periode: Mapped[str | None] = mapped_column(String(20))
@@ -109,7 +109,7 @@ class Pembayaran(Base):
     tanggal_jatuh_tempo: Mapped[date | None] = mapped_column(Date)
     tanggal_bayar: Mapped[date | None] = mapped_column(Date)
     status_pembayaran: Mapped[StatusPembayaran] = mapped_column(
-        Enum(StatusPembayaran), nullable=False, default=StatusPembayaran.menunggu
+        Enum(StatusPembayaran, native_enum=False), nullable=False, default=StatusPembayaran.menunggu
     )
     metode_pembayaran: Mapped[str | None] = mapped_column(String(50))
     bukti_pembayaran_url: Mapped[str | None] = mapped_column(String(255))

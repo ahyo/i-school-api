@@ -39,10 +39,10 @@ class Sekolah(Base):
     nama_sekolah: Mapped[str] = mapped_column(String(200), nullable=False)
     npsn: Mapped[str | None] = mapped_column(String(20), nullable=True)
     jenjang: Mapped[JenjangSekolah] = mapped_column(
-        Enum(JenjangSekolah), nullable=False
+        Enum(JenjangSekolah, native_enum=False), nullable=False
     )
     status: Mapped[StatusSekolah] = mapped_column(
-        Enum(StatusSekolah), nullable=False, default=StatusSekolah.negeri
+        Enum(StatusSekolah, native_enum=False), nullable=False, default=StatusSekolah.negeri
     )
     alamat_jalan: Mapped[str | None] = mapped_column(String(255))
     kelurahan: Mapped[str | None] = mapped_column(String(100))

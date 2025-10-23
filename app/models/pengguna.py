@@ -24,7 +24,9 @@ class Pengguna(Base):
     )
     email_terverifikasi: Mapped[bool] = mapped_column(Boolean, default=False)
     kata_sandi_hash: Mapped[str] = mapped_column(String(255), nullable=False)
-    peran: Mapped[PeranPengguna] = mapped_column(Enum(PeranPengguna), nullable=False)
+    peran: Mapped[PeranPengguna] = mapped_column(
+        Enum(PeranPengguna, native_enum=False), nullable=False
+    )
     sekolah_id: Mapped[str | None] = mapped_column(
         String, ForeignKey("sekolah.id", ondelete="SET NULL")
     )

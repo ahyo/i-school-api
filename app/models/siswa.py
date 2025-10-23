@@ -34,7 +34,9 @@ class Siswa(Base):
     nis: Mapped[str | None] = mapped_column(String(20))
     nama_lengkap: Mapped[str] = mapped_column(String(150), nullable=False)
     nama_panggilan: Mapped[str | None] = mapped_column(String(50))
-    jenis_kelamin: Mapped[JenisKelamin] = mapped_column(Enum(JenisKelamin))
+    jenis_kelamin: Mapped[JenisKelamin] = mapped_column(
+        Enum(JenisKelamin, native_enum=False)
+    )
     tempat_lahir: Mapped[str | None] = mapped_column(String(100))
     tanggal_lahir: Mapped[date | None] = mapped_column(Date)
     agama: Mapped[str | None] = mapped_column(String(50))
@@ -44,7 +46,7 @@ class Siswa(Base):
     nama_ibu: Mapped[str | None] = mapped_column(String(150))
     wali_murid: Mapped[str | None] = mapped_column(String(150))
     status_siswa: Mapped[StatusSiswa] = mapped_column(
-        Enum(StatusSiswa), nullable=False, default=StatusSiswa.aktif
+        Enum(StatusSiswa, native_enum=False), nullable=False, default=StatusSiswa.aktif
     )
     tanggal_diterima: Mapped[date | None] = mapped_column(Date)
     catatan: Mapped[str | None] = mapped_column(String(500))
@@ -93,7 +95,7 @@ class SiswaKelas(Base):
         String, ForeignKey("kelas.id", ondelete="CASCADE"), nullable=False
     )
     status_keanggotaan: Mapped[StatusKeanggotaanKelas] = mapped_column(
-        Enum(StatusKeanggotaanKelas), nullable=False, default=StatusKeanggotaanKelas.aktif
+        Enum(StatusKeanggotaanKelas, native_enum=False), nullable=False, default=StatusKeanggotaanKelas.aktif
     )
     tanggal_masuk: Mapped[date | None] = mapped_column(Date)
     tanggal_keluar: Mapped[date | None] = mapped_column(Date)

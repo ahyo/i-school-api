@@ -9,21 +9,6 @@ from alembic import op
 import sqlalchemy as sa
 
 
-def create_enum_if_not_exists(name: str, values: tuple[str, ...]) -> None:
-    values_sql = ", ".join(f"'{value}'" for value in values)
-    op.execute(
-        sa.text(
-            "DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = '"
-            + name
-            + "') THEN CREATE TYPE "
-            + name
-            + " AS ENUM ("
-            + values_sql
-            + "); END IF; END $$;"
-        )
-    )
-
-
 revision = "20241007_01"
 down_revision = None
 branch_labels = None
@@ -31,69 +16,47 @@ depends_on = None
 
 
 def upgrade() -> None:
-    for enum_name in [
-        "peranpengguna",
-        "statusguru",
-        "jeniskelamin",
-        "jenjangsekolah",
-        "statussekolah",
-        "kelompokmatapelajaran",
-        "statussiswa",
-        "statuskeanggotaan",
-        "semester",
-        "tipepenilaian",
-        "statuskehadiran",
-        "statuskenaikan",
-        "jenispembayaran",
-        "statuspembayaran",
-        "statustagihan",
-    ]:
-        op.execute(sa.text(f"DROP TYPE IF EXISTS {enum_name} CASCADE"))
-
+    enum_kwargs = {"native_enum": False}
     peran_pengguna = sa.Enum(
         "admin_sekolah",
         "guru",
         "operator",
         "keuangan",
         name="peranpengguna",
-        create_type=False,
+        **enum_kwargs,
     )
     status_guru = sa.Enum(
-        "aktif", "tidak_aktif", "cuti", name="statusguru", create_type=False
+        "aktif", "tidak_aktif", "cuti", name="statusguru", **enum_kwargs
     )
     jenis_kelamin = sa.Enum(
-        "laki_laki", "perempuan", name="jeniskelamin", create_type=False
+        "laki_laki", "perempuan", name="jeniskelamin", **enum_kwargs
     )
     jenjang_sekolah = sa.Enum(
-        "SD", "SMP", "SMA", "SMK", name="jenjangsekolah", create_type=False
+        "SD", "SMP", "SMA", "SMK", name="jenjangsekolah", **enum_kwargs
     )
     status_sekolah = sa.Enum(
-        "negeri", "swasta", name="statussekolah", create_type=False
+        "negeri", "swasta", name="statussekolah", **enum_kwargs
     )
     kelompok_mapel = sa.Enum(
-        "umum", "keahlian", "muatan_lokal", "tambahan", name="kelompokmatapelajaran"
+        "umum", "keahlian", "muatan_lokal", "tambahan", name="kelompokmatapelajaran", **enum_kwargs
     )
-    kelompok_mapel.create_type = False
     status_siswa = sa.Enum(
-        "aktif", "lulus", "mutasi", "keluar", name="statussiswa", create_type=False
+        "aktif", "lulus", "mutasi", "keluar", name="statussiswa", **enum_kwargs
     )
     status_keanggotaan = sa.Enum(
-        "aktif", "pindah", "naik", "tinggal_kelas", name="statuskeanggotaan"
+        "aktif", "pindah", "naik", "tinggal_kelas", name="statuskeanggotaan", **enum_kwargs
     )
-    status_keanggotaan.create_type = False
     semester_enum = sa.Enum(
-        "ganjil", "genap", name="semester", create_type=False
+        "ganjil", "genap", name="semester", **enum_kwargs
     )
     tipe_penilaian = sa.Enum(
-        "pengetahuan", "keterampilan", "sikap", "uts", "uas", name="tipepenilaian"
+        "pengetahuan", "keterampilan", "sikap", "uts", "uas", name="tipepenilaian", **enum_kwargs
     )
-    tipe_penilaian.create_type = False
     status_kehadiran = sa.Enum(
-        "hadir", "sakit", "izin", "alfa", "terlambat", name="statuskehadiran"
+        "hadir", "sakit", "izin", "alfa", "terlambat", name="statuskehadiran", **enum_kwargs
     )
-    status_kehadiran.create_type = False
     status_kenaikan = sa.Enum(
-        "naik", "tinggal", "mutasi_keluar", name="statuskenaikan", create_type=False
+        "naik", "tinggal", "mutasi_keluar", name="statuskenaikan", **enum_kwargs
     )
     jenis_pembayaran = sa.Enum(
         "spp",
@@ -102,30 +65,14 @@ def upgrade() -> None:
         "seragam",
         "lainnya",
         name="jenispembayaran",
-        create_type=False,
+        **enum_kwargs,
     )
     status_pembayaran = sa.Enum(
-        "menunggu", "lunas", "menunggak", name="statuspembayaran", create_type=False
+        "menunggu", "lunas", "menunggak", name="statuspembayaran", **enum_kwargs
     )
     status_tagihan = sa.Enum(
-        "belum_dibayar", "sebagian", "lunas", "menunggak", name="statustagihan", create_type=False
+        "belum_dibayar", "sebagian", "lunas", "menunggak", name="statustagihan", **enum_kwargs
     )
-
-    create_enum_if_not_exists("peranpengguna", peran_pengguna.enums)
-    create_enum_if_not_exists("statusguru", status_guru.enums)
-    create_enum_if_not_exists("jeniskelamin", jenis_kelamin.enums)
-    create_enum_if_not_exists("jenjangsekolah", jenjang_sekolah.enums)
-    create_enum_if_not_exists("statussekolah", status_sekolah.enums)
-    create_enum_if_not_exists("kelompokmatapelajaran", kelompok_mapel.enums)
-    create_enum_if_not_exists("statussiswa", status_siswa.enums)
-    create_enum_if_not_exists("statuskeanggotaan", status_keanggotaan.enums)
-    create_enum_if_not_exists("semester", semester_enum.enums)
-    create_enum_if_not_exists("tipepenilaian", tipe_penilaian.enums)
-    create_enum_if_not_exists("statuskehadiran", status_kehadiran.enums)
-    create_enum_if_not_exists("statuskenaikan", status_kenaikan.enums)
-    create_enum_if_not_exists("jenispembayaran", jenis_pembayaran.enums)
-    create_enum_if_not_exists("statuspembayaran", status_pembayaran.enums)
-    create_enum_if_not_exists("statustagihan", status_tagihan.enums)
 
     op.create_table(
         "sekolah",
@@ -609,19 +556,3 @@ def downgrade() -> None:
     op.drop_index("ix_pengguna_email", table_name="pengguna")
     op.drop_table("pengguna")
     op.drop_table("sekolah")
-
-    sa.Enum(name="statustagihan").drop(op.get_bind(), checkfirst=True)
-    sa.Enum(name="statuspembayaran").drop(op.get_bind(), checkfirst=True)
-    sa.Enum(name="jenispembayaran").drop(op.get_bind(), checkfirst=True)
-    sa.Enum(name="statuskenaikan").drop(op.get_bind(), checkfirst=True)
-    sa.Enum(name="statuskehadiran").drop(op.get_bind(), checkfirst=True)
-    sa.Enum(name="tipepenilaian").drop(op.get_bind(), checkfirst=True)
-    sa.Enum(name="semester").drop(op.get_bind(), checkfirst=True)
-    sa.Enum(name="statuskeanggotaan").drop(op.get_bind(), checkfirst=True)
-    sa.Enum(name="statussiswa").drop(op.get_bind(), checkfirst=True)
-    sa.Enum(name="kelompokmatapelajaran").drop(op.get_bind(), checkfirst=True)
-    sa.Enum(name="statussekolah").drop(op.get_bind(), checkfirst=True)
-    sa.Enum(name="jenjangsekolah").drop(op.get_bind(), checkfirst=True)
-    sa.Enum(name="jeniskelamin").drop(op.get_bind(), checkfirst=True)
-    sa.Enum(name="statusguru").drop(op.get_bind(), checkfirst=True)
-    sa.Enum(name="peranpengguna").drop(op.get_bind(), checkfirst=True)

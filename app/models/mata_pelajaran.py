@@ -24,7 +24,7 @@ class MataPelajaran(Base):
     kode_mapel: Mapped[str | None] = mapped_column(String(20))
     nama_mapel: Mapped[str] = mapped_column(String(150), nullable=False)
     kelompok: Mapped[KelompokMataPelajaran] = mapped_column(
-        Enum(KelompokMataPelajaran), nullable=False, default=KelompokMataPelajaran.umum
+        Enum(KelompokMataPelajaran, native_enum=False), nullable=False, default=KelompokMataPelajaran.umum
     )
     tingkat_minimal: Mapped[int | None] = mapped_column(Integer)
     tingkat_maksimal: Mapped[int | None] = mapped_column(Integer)

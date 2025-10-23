@@ -41,9 +41,11 @@ class WebsiteKonten(Base):
     )
     judul: Mapped[str] = mapped_column(String(200), nullable=False)
     slug: Mapped[str] = mapped_column(String(220), nullable=False, index=True)
-    jenis: Mapped[JenisKonten] = mapped_column(Enum(JenisKonten), nullable=False)
+    jenis: Mapped[JenisKonten] = mapped_column(
+        Enum(JenisKonten, native_enum=False), nullable=False
+    )
     status: Mapped[StatusKonten] = mapped_column(
-        Enum(StatusKonten), nullable=False, default=StatusKonten.draft
+        Enum(StatusKonten, native_enum=False), nullable=False, default=StatusKonten.draft
     )
     ringkasan: Mapped[str | None] = mapped_column(String(500))
     isi: Mapped[str] = mapped_column(Text, nullable=False)
