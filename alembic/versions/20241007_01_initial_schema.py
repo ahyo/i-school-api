@@ -9,6 +9,21 @@ from alembic import op
 import sqlalchemy as sa
 
 
+def create_enum_if_not_exists(name: str, values: tuple[str, ...]) -> None:
+    values_sql = ", ".join(f"'{value}'" for value in values)
+    op.execute(
+        sa.text(
+            "DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = '"
+            + name
+            + "') THEN CREATE TYPE "
+            + name
+            + " AS ENUM ("
+            + values_sql
+            + "); END IF; END $$;"
+        )
+    )
+
+
 revision = "20241007_01"
 down_revision = None
 branch_labels = None
@@ -22,28 +37,45 @@ def upgrade() -> None:
         "operator",
         "keuangan",
         name="peranpengguna",
+        create_type=False,
     )
-    status_guru = sa.Enum("aktif", "tidak_aktif", "cuti", name="statusguru")
-    jenis_kelamin = sa.Enum("laki_laki", "perempuan", name="jeniskelamin")
+    status_guru = sa.Enum(
+        "aktif", "tidak_aktif", "cuti", name="statusguru", create_type=False
+    )
+    jenis_kelamin = sa.Enum(
+        "laki_laki", "perempuan", name="jeniskelamin", create_type=False
+    )
     jenjang_sekolah = sa.Enum(
         "SD", "SMP", "SMA", "SMK", name="jenjangsekolah", create_type=False
     )
-    status_sekolah = sa.Enum("negeri", "swasta", name="statussekolah")
+    status_sekolah = sa.Enum(
+        "negeri", "swasta", name="statussekolah", create_type=False
+    )
     kelompok_mapel = sa.Enum(
         "umum", "keahlian", "muatan_lokal", "tambahan", name="kelompokmatapelajaran"
     )
-    status_siswa = sa.Enum("aktif", "lulus", "mutasi", "keluar", name="statussiswa")
+    kelompok_mapel.create_type = False
+    status_siswa = sa.Enum(
+        "aktif", "lulus", "mutasi", "keluar", name="statussiswa", create_type=False
+    )
     status_keanggotaan = sa.Enum(
         "aktif", "pindah", "naik", "tinggal_kelas", name="statuskeanggotaan"
     )
-    semester_enum = sa.Enum("ganjil", "genap", name="semester")
+    status_keanggotaan.create_type = False
+    semester_enum = sa.Enum(
+        "ganjil", "genap", name="semester", create_type=False
+    )
     tipe_penilaian = sa.Enum(
         "pengetahuan", "keterampilan", "sikap", "uts", "uas", name="tipepenilaian"
     )
+    tipe_penilaian.create_type = False
     status_kehadiran = sa.Enum(
         "hadir", "sakit", "izin", "alfa", "terlambat", name="statuskehadiran"
     )
-    status_kenaikan = sa.Enum("naik", "tinggal", "mutasi_keluar", name="statuskenaikan")
+    status_kehadiran.create_type = False
+    status_kenaikan = sa.Enum(
+        "naik", "tinggal", "mutasi_keluar", name="statuskenaikan", create_type=False
+    )
     jenis_pembayaran = sa.Enum(
         "spp",
         "daftar_ulang",
@@ -51,29 +83,30 @@ def upgrade() -> None:
         "seragam",
         "lainnya",
         name="jenispembayaran",
+        create_type=False,
     )
     status_pembayaran = sa.Enum(
-        "menunggu", "lunas", "menunggak", name="statuspembayaran"
+        "menunggu", "lunas", "menunggak", name="statuspembayaran", create_type=False
     )
     status_tagihan = sa.Enum(
-        "belum_dibayar", "sebagian", "lunas", "menunggak", name="statustagihan"
+        "belum_dibayar", "sebagian", "lunas", "menunggak", name="statustagihan", create_type=False
     )
 
-    peran_pengguna.create(op.get_bind(), checkfirst=True)
-    status_guru.create(op.get_bind(), checkfirst=True)
-    jenis_kelamin.create(op.get_bind(), checkfirst=True)
-    jenjang_sekolah.create(op.get_bind(), checkfirst=True)
-    status_sekolah.create(op.get_bind(), checkfirst=True)
-    kelompok_mapel.create(op.get_bind(), checkfirst=True)
-    status_siswa.create(op.get_bind(), checkfirst=True)
-    status_keanggotaan.create(op.get_bind(), checkfirst=True)
-    semester_enum.create(op.get_bind(), checkfirst=True)
-    tipe_penilaian.create(op.get_bind(), checkfirst=True)
-    status_kehadiran.create(op.get_bind(), checkfirst=True)
-    status_kenaikan.create(op.get_bind(), checkfirst=True)
-    jenis_pembayaran.create(op.get_bind(), checkfirst=True)
-    status_pembayaran.create(op.get_bind(), checkfirst=True)
-    status_tagihan.create(op.get_bind(), checkfirst=True)
+    create_enum_if_not_exists("peranpengguna", peran_pengguna.enums)
+    create_enum_if_not_exists("statusguru", status_guru.enums)
+    create_enum_if_not_exists("jeniskelamin", jenis_kelamin.enums)
+    create_enum_if_not_exists("jenjangsekolah", jenjang_sekolah.enums)
+    create_enum_if_not_exists("statussekolah", status_sekolah.enums)
+    create_enum_if_not_exists("kelompokmatapelajaran", kelompok_mapel.enums)
+    create_enum_if_not_exists("statussiswa", status_siswa.enums)
+    create_enum_if_not_exists("statuskeanggotaan", status_keanggotaan.enums)
+    create_enum_if_not_exists("semester", semester_enum.enums)
+    create_enum_if_not_exists("tipepenilaian", tipe_penilaian.enums)
+    create_enum_if_not_exists("statuskehadiran", status_kehadiran.enums)
+    create_enum_if_not_exists("statuskenaikan", status_kenaikan.enums)
+    create_enum_if_not_exists("jenispembayaran", jenis_pembayaran.enums)
+    create_enum_if_not_exists("statuspembayaran", status_pembayaran.enums)
+    create_enum_if_not_exists("statustagihan", status_tagihan.enums)
 
     op.create_table(
         "sekolah",
