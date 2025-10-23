@@ -60,7 +60,7 @@ jobs:
       - name: Sync project files to ECS
         uses: burnett01/rsync-deployments@7.1.0
         with:
-          switches: -avzr --delete --exclude ".git" --exclude ".github" --exclude "__pycache__" --exclude ".venv"
+          switches: -avzr --delete --exclude ".git" --exclude ".github" --exclude "__pycache__" --exclude ".venv" --exclude ".env"
           path: ./
           remote_path: ${{ env.REMOTE_PATH }}
           remote_host: ${{ env.ECS_HOST }}
