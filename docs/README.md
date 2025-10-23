@@ -1,3 +1,5 @@
+![Deploy CI/CD](https://github.com/ahyo/i-school-api/actions/workflows/deploy.yml/badge.svg)
+
 # Sistem Sekolah Online - Backend FastAPI
 
 ## Arsitektur Singkat
