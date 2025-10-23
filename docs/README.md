@@ -1,4 +1,4 @@
-# SI Sekolah - Backend FastAPI
+# Sistem Sekolah Online - Backend FastAPI
 
 ## Arsitektur Singkat
 - `app/main.py` membuat instance FastAPI dan memuat seluruh router.
