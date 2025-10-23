@@ -31,6 +31,25 @@ depends_on = None
 
 
 def upgrade() -> None:
+    for enum_name in [
+        "peranpengguna",
+        "statusguru",
+        "jeniskelamin",
+        "jenjangsekolah",
+        "statussekolah",
+        "kelompokmatapelajaran",
+        "statussiswa",
+        "statuskeanggotaan",
+        "semester",
+        "tipepenilaian",
+        "statuskehadiran",
+        "statuskenaikan",
+        "jenispembayaran",
+        "statuspembayaran",
+        "statustagihan",
+    ]:
+        op.execute(sa.text(f"DROP TYPE IF EXISTS {enum_name} CASCADE"))
+
     peran_pengguna = sa.Enum(
         "admin_sekolah",
         "guru",
