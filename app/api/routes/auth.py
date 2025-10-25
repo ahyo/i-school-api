@@ -4,6 +4,7 @@ from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.core.deps import get_db, get_pengguna_aktif
+from app.core.config import settings
 from app.core.security import (
     buat_hash_kata_sandi,
     verifikasi_kata_sandi,
