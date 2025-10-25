@@ -1,3 +1,4 @@
+import logging
 import uuid
 from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -24,6 +25,10 @@ from app.schemas.auth import (
 )
 from app.schemas.common import PesanResponse
 from app.models.sekolah import StatusSekolah
+from app.utils.email import send_email
+
+
+logger = logging.getLogger(__name__)
 
 
 router = APIRouter(prefix="/auth", tags=["Autentikasi"])
@@ -84,6 +89,29 @@ def register_admin_sekolah(
     db.commit()
     db.refresh(pengguna)
     db.refresh(sekolah)
+
+    try:
+        verification_link = (
+            f"{settings.base_url}/auth/verify-email?token={token.token}"
+        )
+        email_content = f"""
+            <p>Halo {payload.nama_lengkap},</p>
+            <p>Terima kasih telah mendaftar sebagai admin sekolah pada <strong>{settings.app_nama}</strong>.</p>
+            <p>Silakan verifikasi email Anda dengan mengunjungi tautan berikut:</p>
+            <p><a href="{verification_link}">{verification_link}</a></p>
+            <p>Atau gunakan token berikut melalui aplikasi:</p>
+            <p><code>{token.token}</code></p>
+            <p>Salam hangat,<br />Tim {settings.app_nama}</p>
+        """
+        send_email(
+            to_email=payload.email,
+            subject="Verifikasi Email Admin Sekolah",
+            html_content=email_content,
+        )
+    except Exception as exc:  # noqa: BLE001
+        logger.warning(
+            "Gagal mengirim email verifikasi ke %s: %s", payload.email, exc
+        )
 
     return ResponRegistrasiAdmin(
         pengguna_id=pengguna.id,

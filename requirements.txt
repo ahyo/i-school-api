@@ -12,3 +12,4 @@ python-dateutil==2.9.0.post0
 alembic==1.13.2
 pytest==8.3.2
 pydantic_settings
+sib-api-v3-sdk==7.6.0

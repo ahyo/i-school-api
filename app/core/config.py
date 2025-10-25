@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     email_sender_name: str = "Sistem Sekolah Online"
     base_url: str = "http://localhost:8000"
     timezone: str = "Asia/Jakarta"
+    brevo_api_key: str | None = None
 
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=False)
 
