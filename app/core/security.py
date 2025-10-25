@@ -5,22 +5,14 @@ from passlib.context import CryptContext
 from app.core.config import settings
 
 pwd_context = CryptContext(
-    schemes=["bcrypt"],
+    schemes=["bcrypt_sha256"],
     deprecated="auto",
-    bcrypt__truncate_error=False,
 )
 
 ALGORITHM = "HS256"
-MAX_BCRYPT_LENGTH = 72  # in bytes
-
-
-def _validate_password_length(kata_sandi: str) -> None:
-    if len(kata_sandi.encode("utf-8")) > MAX_BCRYPT_LENGTH:
-        raise ValueError("Kata sandi maksimal 72 karakter (sesuai batas bcrypt).")
 
 
 def buat_hash_kata_sandi(kata_sandi: str) -> str:
-    _validate_password_length(kata_sandi)
     return pwd_context.hash(kata_sandi)
 
 
