@@ -54,3 +54,11 @@ class SiswaDetail(SiswaBase):
     sekolah_id: str
     dibuat_pada: datetime
     diperbarui_pada: datetime
+
+
+class SiswaRingkas(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str
+    nama_lengkap: str
+    nisn: str | None = None

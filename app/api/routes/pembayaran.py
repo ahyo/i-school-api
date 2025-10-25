@@ -119,6 +119,7 @@ def catat_pembayaran(
 
 @router.get("", response_model=PaginatedResponse[PembayaranDetail])
 def daftar_pembayaran(
+    siswa_id: str | None = Query(default=None),
     page: int = Query(default=1, ge=1),
     limit: int = Query(default=20, ge=1, le=100),
     db: Session = Depends(get_db),
@@ -131,6 +132,8 @@ def daftar_pembayaran(
         .filter(Pembayaran.sekolah_id == _get_sekolah_id(pengguna))
         .order_by(Pembayaran.dicatat_pada.desc())
     )
+    if siswa_id:
+        query = query.filter(Pembayaran.siswa_id == siswa_id)
     items, total, total_pages = paginate_query(query, page, limit)
     return PaginatedResponse[PembayaranDetail](
         data=items,

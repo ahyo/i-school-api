@@ -35,3 +35,8 @@ class Pengguna(Base):
     sekolah = relationship("Sekolah", back_populates="pengguna")
     guru = relationship("Guru", back_populates="pengguna", uselist=False)
     konten_dibuat = relationship("WebsiteKonten", back_populates="penulis")
+    catatan_dibuat = relationship("CatatanSiswa", back_populates="pencatat")
+
+    @property
+    def guru_id(self) -> str | None:  # pragma: no cover - helper for schema
+        return self.guru.id if self.guru else None

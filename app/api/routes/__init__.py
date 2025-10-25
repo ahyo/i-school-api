@@ -13,6 +13,9 @@ from . import (
     tagihan,
     laporan,
     website,
+    pendaftaran,
+    catatan,
+    kenaikan,
 )
 
 
@@ -30,3 +33,6 @@ api_router.include_router(pembayaran.router)
 api_router.include_router(tagihan.router)
 api_router.include_router(laporan.router)
 api_router.include_router(website.router)
+api_router.include_router(pendaftaran.router)
+api_router.include_router(catatan.router)
+api_router.include_router(kenaikan.router)

@@ -80,3 +80,7 @@ class Sekolah(Base):
     nilai = relationship("Nilai", back_populates="sekolah")
     tagihan = relationship("Tagihan", back_populates="sekolah")
     konten_website = relationship("WebsiteKonten", back_populates="sekolah")
+    pendaftaran_siswa = relationship(
+        "PendaftaranSiswa", back_populates="sekolah", cascade="all, delete-orphan"
+    )
+    catatan_siswa = relationship("CatatanSiswa", back_populates="sekolah")

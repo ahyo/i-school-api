@@ -10,7 +10,14 @@ router = APIRouter(prefix="/sekolah", tags=["Sekolah"])
 
 @router.get("/profil", response_model=SekolahDetail)
 def get_profil_sekolah(
-    pengguna: Pengguna = Depends(require_peran(PeranPengguna.admin_sekolah)),
+    pengguna: Pengguna = Depends(
+        require_peran(
+            PeranPengguna.admin_sekolah,
+            PeranPengguna.guru,
+            PeranPengguna.operator,
+            PeranPengguna.keuangan,
+        )
+    ),
 ) -> Sekolah:
     sekolah = pengguna.sekolah
     if sekolah is None:

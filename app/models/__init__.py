@@ -26,8 +26,10 @@ from app.models.pembayaran import (
     Tagihan,
     StatusTagihan,
 )
+from app.models.pendaftaran import PendaftaranSiswa, StatusPendaftaran
 from app.models.referensi import JenisKelamin
 from app.models.website import WebsiteKonten, JenisKonten, StatusKonten
+from app.models.catatan import CatatanSiswa, KategoriCatatan
 
 __all__ = [
     "Pengguna",
@@ -63,4 +65,8 @@ __all__ = [
     "WebsiteKonten",
     "JenisKonten",
     "StatusKonten",
+    "PendaftaranSiswa",
+    "StatusPendaftaran",
+    "CatatanSiswa",
+    "KategoriCatatan",
 ]

@@ -44,7 +44,18 @@ class TahunAjaran(Base):
         "Kelas", back_populates="tahun_ajaran", cascade="all, delete-orphan"
     )
     nilai = relationship("Nilai", back_populates="tahun_ajaran")
-    kenaikan_kelas = relationship("KenaikanKelas", back_populates="tahun_ajaran_tujuan")
+    kenaikan_kelas = relationship(
+        "KenaikanKelas",
+        back_populates="tahun_ajaran_tujuan",
+        foreign_keys="KenaikanKelas.tahun_ajaran_tujuan_id",
+        cascade="all, delete-orphan",
+    )
+    kenaikan_kelas_asal = relationship(
+        "KenaikanKelas",
+        back_populates="tahun_ajaran_asal",
+        foreign_keys="KenaikanKelas.tahun_ajaran_asal_id",
+        cascade="all, delete-orphan",
+    )
 
 
 class Kelas(Base):
@@ -238,8 +249,15 @@ class KenaikanKelas(Base):
     catatan: Mapped[str | None] = mapped_column(Text)
 
     siswa = relationship("Siswa", back_populates="riwayat_kenaikan")
+    tahun_ajaran_asal = relationship(
+        "TahunAjaran",
+        back_populates="kenaikan_kelas_asal",
+        foreign_keys=[tahun_ajaran_asal_id],
+    )
     tahun_ajaran_tujuan = relationship(
-        "TahunAjaran", back_populates="kenaikan_kelas", foreign_keys=[tahun_ajaran_tujuan_id]
+        "TahunAjaran",
+        back_populates="kenaikan_kelas",
+        foreign_keys=[tahun_ajaran_tujuan_id],
     )
     kelas_asal = relationship(
         "Kelas", foreign_keys=[kelas_asal_id]

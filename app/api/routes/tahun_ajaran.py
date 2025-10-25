@@ -52,7 +52,9 @@ def daftar_tahun_ajaran(
     page: int = Query(default=1, ge=1),
     limit: int = Query(default=20, ge=1, le=100),
     db: Session = Depends(get_db),
-    pengguna: Pengguna = Depends(require_peran(PeranPengguna.admin_sekolah)),
+    pengguna: Pengguna = Depends(
+        require_peran(PeranPengguna.admin_sekolah, PeranPengguna.guru)
+    ),
 ) -> PaginatedResponse[TahunAjaranDetail]:
     query = (
         db.query(TahunAjaran)

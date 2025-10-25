@@ -73,6 +73,9 @@ class Siswa(Base):
         "KenaikanKelas", back_populates="siswa", cascade="all, delete-orphan"
     )
     tagihan = relationship("Tagihan", back_populates="siswa")
+    catatan = relationship(
+        "CatatanSiswa", back_populates="siswa", cascade="all, delete-orphan"
+    )
 
 
 class StatusKeanggotaanKelas(PyEnum):

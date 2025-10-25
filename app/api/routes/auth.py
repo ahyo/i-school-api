@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from app.core.deps import get_db
+from app.core.deps import get_db, get_pengguna_aktif
 from app.core.security import (
     buat_hash_kata_sandi,
     verifikasi_kata_sandi,
@@ -20,6 +20,7 @@ from app.schemas.auth import (
     PermintaanLogin,
     TokenResponse,
     PermintaanVerifikasiEmail,
+    PenggunaProfile,
 )
 from app.schemas.common import PesanResponse
 from app.models.sekolah import StatusSekolah
@@ -134,3 +135,8 @@ def verifikasi_email(
     db.commit()
 
     return PesanResponse(pesan="Email berhasil diverifikasi. Silakan login.")
+
+
+@router.get("/me", response_model=PenggunaProfile)
+def profil_pengguna(pengguna: Pengguna = Depends(get_pengguna_aktif)) -> Pengguna:
+    return pengguna

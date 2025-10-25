@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
 from app.models.sekolah import JenjangSekolah, StatusSekolah
+from app.models.pengguna import PeranPengguna
 
 
 class RegistrasiAdminSekolah(BaseModel):
@@ -38,3 +39,15 @@ class TokenResponse(BaseModel):
 
 class PermintaanVerifikasiEmail(BaseModel):
     token: str
+
+
+class PenggunaProfile(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str
+    nama_lengkap: str
+    email: EmailStr
+    peran: PeranPengguna
+    sekolah_id: str | None
+    status_aktif: bool
+    guru_id: str | None = None

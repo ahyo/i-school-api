@@ -17,6 +17,7 @@ from app.schemas.siswa import (
     SiswaCreate,
     SiswaDetail,
     SiswaUpdate,
+    SiswaRingkas,
 )
 from app.schemas.tahun_ajaran import (
     TahunAjaranCreate,
@@ -51,6 +52,19 @@ from app.schemas.website import (
     WebsiteKontenDetail,
     WebsiteKontenUpdate,
 )
+from app.schemas.pendaftaran import (
+    PendaftaranSiswaPublicCreate,
+    PendaftaranSiswaDetail,
+    PendaftaranSiswaUpdateStatus,
+)
+from app.schemas.kenaikan import (
+    KenaikanKelasCreate,
+    KenaikanKelasDetail,
+)
+from app.schemas.catatan import (
+    CatatanSiswaCreate,
+    CatatanSiswaDetail,
+)
 from app.schemas.common import PesanResponse
 from app.schemas.pagination import PaginatedResponse, PaginationMeta
 
@@ -74,6 +88,7 @@ __all__ = [
     "SiswaCreate",
     "SiswaDetail",
     "SiswaUpdate",
+    "SiswaRingkas",
     "TahunAjaranCreate",
     "TahunAjaranDetail",
     "TahunAjaranUpdate",
@@ -96,4 +111,11 @@ __all__ = [
     "WebsiteKontenCreate",
     "WebsiteKontenDetail",
     "WebsiteKontenUpdate",
+    "PendaftaranSiswaPublicCreate",
+    "PendaftaranSiswaDetail",
+    "PendaftaranSiswaUpdateStatus",
+    "KenaikanKelasCreate",
+    "KenaikanKelasDetail",
+    "CatatanSiswaCreate",
+    "CatatanSiswaDetail",
 ]
