@@ -59,10 +59,15 @@ def register_admin_sekolah(
         status_verifikasi=False,
     )
 
+    try:
+        kata_sandi_hash = buat_hash_kata_sandi(payload.kata_sandi)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
     pengguna = Pengguna(
         nama_lengkap=payload.nama_lengkap,
         email=payload.email,
-        kata_sandi_hash=buat_hash_kata_sandi(payload.kata_sandi),
+        kata_sandi_hash=kata_sandi_hash,
         peran=PeranPengguna.admin_sekolah,
         email_terverifikasi=False,
         status_aktif=True,
@@ -99,7 +104,12 @@ def login(
     )
     if pengguna is None:
         raise HTTPException(status_code=401, detail="Email atau kata sandi salah")
-    if not verifikasi_kata_sandi(credentials.kata_sandi, pengguna.kata_sandi_hash):
+    try:
+        valid = verifikasi_kata_sandi(credentials.kata_sandi, pengguna.kata_sandi_hash)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    if not valid:
         raise HTTPException(status_code=401, detail="Email atau kata sandi salah")
     if not pengguna.status_aktif:
         raise HTTPException(status_code=403, detail="Akun tidak aktif")

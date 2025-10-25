@@ -6,7 +6,7 @@ from app.models.pengguna import PeranPengguna
 class RegistrasiAdminSekolah(BaseModel):
     nama_lengkap: str = Field(..., max_length=150)
     email: EmailStr
-    kata_sandi: str = Field(..., min_length=8)
+    kata_sandi: str = Field(..., min_length=8, max_length=72)
     nama_sekolah: str = Field(..., max_length=200)
     jenjang: JenjangSekolah
     status: StatusSekolah

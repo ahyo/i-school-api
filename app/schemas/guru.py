@@ -29,7 +29,7 @@ class GuruBase(BaseModel):
 class GuruCreate(GuruBase):
     nama_lengkap: str = Field(..., max_length=150)
     email: EmailStr
-    kata_sandi: str = Field(..., min_length=8)
+    kata_sandi: str = Field(..., min_length=8, max_length=72)
 
 
 class GuruUpdate(GuruBase):

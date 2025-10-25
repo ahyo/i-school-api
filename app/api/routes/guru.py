@@ -26,10 +26,15 @@ def tambah_guru(
     ):
         raise HTTPException(status_code=400, detail="Email guru sudah digunakan")
 
+    try:
+        kata_sandi_hash = buat_hash_kata_sandi(payload.kata_sandi)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
     pengguna = Pengguna(
         nama_lengkap=payload.nama_lengkap,
         email=payload.email,
-        kata_sandi_hash=buat_hash_kata_sandi(payload.kata_sandi),
+        kata_sandi_hash=kata_sandi_hash,
         peran=PeranPengguna.guru,
         email_terverifikasi=True,
         status_aktif=True,
