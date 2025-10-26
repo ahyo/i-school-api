@@ -58,16 +58,19 @@ class EnvelopeAPIRoute(APIRoute):
         response_model = kwargs.get("response_model")
         self.original_response_model = response_model
 
-        if response_model is None or isinstance(response_model, DefaultPlaceholder):
-            kwargs["response_model"] = StandardResponse[Any]
-        else:
-            origin = getattr(response_model, "__origin__", None)
-            if origin is StandardResponse:
-                kwargs["response_model"] = response_model
-            else:
-                kwargs["response_model"] = StandardResponse[response_model]  # type: ignore[index]
-
         super().__init__(*args, **kwargs)
+
+        if (
+            self.original_response_model is None
+            or isinstance(self.original_response_model, DefaultPlaceholder)
+        ):
+            self.response_model = StandardResponse[Any]
+        else:
+            origin = getattr(self.original_response_model, "__origin__", None)
+            if origin is StandardResponse:
+                self.response_model = self.original_response_model
+            else:
+                self.response_model = StandardResponse[self.original_response_model]  # type: ignore[index]
 
     def get_route_handler(self):
         original_route_handler = super().get_route_handler()
