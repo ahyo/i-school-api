@@ -10,9 +10,12 @@ from app.schemas.tahun_ajaran import (
 )
 from app.schemas.pagination import PaginatedResponse, PaginationMeta
 from app.utils.pagination import paginate_query
+from app.core.responses import EnvelopeAPIRoute
 
 
-router = APIRouter(prefix="/tahun-ajaran", tags=["Tahun Ajaran"])
+router = APIRouter(
+    prefix="/tahun-ajaran", tags=["Tahun Ajaran"], route_class=EnvelopeAPIRoute
+)
 
 
 def _get_sekolah_id(pengguna: Pengguna) -> str:

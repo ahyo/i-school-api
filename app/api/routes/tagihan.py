@@ -24,9 +24,12 @@ from app.schemas.tagihan import (
 )
 from app.schemas.pagination import PaginatedResponse, PaginationMeta
 from app.utils.pagination import paginate_query
+from app.core.responses import EnvelopeAPIRoute
 
 
-router = APIRouter(prefix="/tagihan", tags=["Tagihan"])
+router = APIRouter(
+    prefix="/tagihan", tags=["Tagihan"], route_class=EnvelopeAPIRoute
+)
 
 
 NAMA_BULAN_ID = {

@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from app.core.responses import EnvelopeAPIRoute
 from . import (
     auth,
     sekolah,
@@ -19,7 +20,7 @@ from . import (
 )
 
 
-api_router = APIRouter()
+api_router = APIRouter(route_class=EnvelopeAPIRoute)
 api_router.include_router(auth.router)
 api_router.include_router(sekolah.router)
 api_router.include_router(guru.router)

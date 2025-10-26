@@ -33,12 +33,13 @@ from app.schemas.auth import (
 from app.schemas.common import PesanResponse
 from app.models.sekolah import StatusSekolah
 from app.utils.email import send_email
+from app.core.responses import EnvelopeAPIRoute
 
 
 logger = logging.getLogger(__name__)
 
 
-router = APIRouter(prefix="/auth", tags=["Autentikasi"])
+router = APIRouter(prefix="/auth", tags=["Autentikasi"], route_class=EnvelopeAPIRoute)
 
 
 @router.post(

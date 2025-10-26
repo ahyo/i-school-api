@@ -18,9 +18,12 @@ from app.schemas.pembayaran import (
 )
 from app.schemas.pagination import PaginatedResponse, PaginationMeta
 from app.utils.pagination import paginate_query
+from app.core.responses import EnvelopeAPIRoute
 
 
-router = APIRouter(prefix="/pembayaran", tags=["Pembayaran"])
+router = APIRouter(
+    prefix="/pembayaran", tags=["Pembayaran"], route_class=EnvelopeAPIRoute
+)
 
 
 def _get_sekolah_id(pengguna: Pengguna) -> str:

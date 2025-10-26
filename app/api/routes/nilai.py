@@ -9,9 +9,10 @@ from app.models.guru import Guru
 from app.schemas.nilai import NilaiCreate, NilaiDetail
 from app.schemas.pagination import PaginatedResponse, PaginationMeta
 from app.utils.pagination import paginate_query
+from app.core.responses import EnvelopeAPIRoute
 
 
-router = APIRouter(prefix="/nilai", tags=["Nilai"])
+router = APIRouter(prefix="/nilai", tags=["Nilai"], route_class=EnvelopeAPIRoute)
 
 
 def _get_sekolah_id(pengguna: Pengguna) -> str:

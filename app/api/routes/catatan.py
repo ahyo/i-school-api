@@ -5,9 +5,12 @@ from app.models import Pengguna, PeranPengguna, CatatanSiswa, KategoriCatatan, S
 from app.schemas.catatan import CatatanSiswaCreate, CatatanSiswaDetail
 from app.schemas.pagination import PaginatedResponse, PaginationMeta
 from app.utils.pagination import paginate_query
+from app.core.responses import EnvelopeAPIRoute
 
 
-router = APIRouter(prefix="/catatan", tags=["Catatan Siswa"])
+router = APIRouter(
+    prefix="/catatan", tags=["Catatan Siswa"], route_class=EnvelopeAPIRoute
+)
 
 
 def _get_sekolah_id(pengguna: Pengguna) -> str:

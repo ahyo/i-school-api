@@ -15,9 +15,14 @@ from app.schemas.pendaftaran import (
 )
 from app.schemas.pagination import PaginatedResponse, PaginationMeta
 from app.utils.pagination import paginate_query
+from app.core.responses import EnvelopeAPIRoute
 
 
-router = APIRouter(prefix="/pendaftaran", tags=["Pendaftaran Siswa"])
+router = APIRouter(
+    prefix="/pendaftaran",
+    tags=["Pendaftaran Siswa"],
+    route_class=EnvelopeAPIRoute,
+)
 
 
 @router.post(

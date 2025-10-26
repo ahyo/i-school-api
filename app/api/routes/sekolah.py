@@ -3,9 +3,12 @@ from sqlalchemy.orm import Session
 from app.core.deps import get_db, require_peran
 from app.models import Sekolah, Pengguna, PeranPengguna
 from app.schemas.sekolah import SekolahDetail, SekolahUpdate
+from app.core.responses import EnvelopeAPIRoute
 
 
-router = APIRouter(prefix="/sekolah", tags=["Sekolah"])
+router = APIRouter(
+    prefix="/sekolah", tags=["Sekolah"], route_class=EnvelopeAPIRoute
+)
 
 
 @router.get("/profil", response_model=SekolahDetail)

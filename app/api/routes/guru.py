@@ -7,9 +7,10 @@ from app.models.guru import StatusGuru
 from app.schemas.guru import GuruCreate, GuruDetail, GuruUpdate
 from app.schemas.pagination import PaginatedResponse, PaginationMeta
 from app.utils.pagination import paginate_query
+from app.core.responses import EnvelopeAPIRoute
 
 
-router = APIRouter(prefix="/guru", tags=["Guru"])
+router = APIRouter(prefix="/guru", tags=["Guru"], route_class=EnvelopeAPIRoute)
 
 
 @router.post("", response_model=GuruDetail, status_code=status.HTTP_201_CREATED)

@@ -6,9 +6,10 @@ from app.models.akademik import Kelas, TahunAjaran
 from app.schemas.kelas import KelasCreate, KelasDetail, KelasUpdate
 from app.schemas.pagination import PaginatedResponse, PaginationMeta
 from app.utils.pagination import paginate_query
+from app.core.responses import EnvelopeAPIRoute
 
 
-router = APIRouter(prefix="/kelas", tags=["Kelas"])
+router = APIRouter(prefix="/kelas", tags=["Kelas"], route_class=EnvelopeAPIRoute)
 
 
 @router.post("", response_model=KelasDetail, status_code=status.HTTP_201_CREATED)

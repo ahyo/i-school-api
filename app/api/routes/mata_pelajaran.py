@@ -10,9 +10,14 @@ from app.schemas.mata_pelajaran import (
 )
 from app.schemas.pagination import PaginatedResponse, PaginationMeta
 from app.utils.pagination import paginate_query
+from app.core.responses import EnvelopeAPIRoute
 
 
-router = APIRouter(prefix="/mata-pelajaran", tags=["Mata Pelajaran"])
+router = APIRouter(
+    prefix="/mata-pelajaran",
+    tags=["Mata Pelajaran"],
+    route_class=EnvelopeAPIRoute,
+)
 
 
 @router.post("", response_model=MataPelajaranDetail, status_code=status.HTTP_201_CREATED)

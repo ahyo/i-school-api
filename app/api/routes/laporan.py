@@ -13,9 +13,12 @@ from app.models import (
 )
 from app.models.pembayaran import StatusPembayaran
 from app.schemas.laporan import LaporanPembayaranDetail
+from app.core.responses import EnvelopeAPIRoute
 
 
-router = APIRouter(prefix="/laporan", tags=["Laporan"])
+router = APIRouter(
+    prefix="/laporan", tags=["Laporan"], route_class=EnvelopeAPIRoute
+)
 
 
 def _get_sekolah_id(pengguna: Pengguna) -> str:

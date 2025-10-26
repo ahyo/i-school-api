@@ -8,9 +8,10 @@ from app.models.akademik import Kelas
 from app.schemas.siswa import SiswaCreate, SiswaDetail, SiswaUpdate
 from app.schemas.pagination import PaginatedResponse, PaginationMeta
 from app.utils.pagination import paginate_query
+from app.core.responses import EnvelopeAPIRoute
 
 
-router = APIRouter(prefix="/siswa", tags=["Siswa"])
+router = APIRouter(prefix="/siswa", tags=["Siswa"], route_class=EnvelopeAPIRoute)
 
 
 @router.post("", response_model=SiswaDetail, status_code=status.HTTP_201_CREATED)

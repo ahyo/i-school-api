@@ -18,9 +18,12 @@ from app.schemas.website import (
 from app.schemas.pagination import PaginatedResponse, PaginationMeta
 from app.utils.pagination import paginate_query
 from app.utils.slug import buat_slug, slug_unik_generator
+from app.core.responses import EnvelopeAPIRoute
 
 
-router = APIRouter(prefix="/website", tags=["Website Sekolah"])
+router = APIRouter(
+    prefix="/website", tags=["Website Sekolah"], route_class=EnvelopeAPIRoute
+)
 
 
 def _get_sekolah_id(pengguna: Pengguna) -> str:

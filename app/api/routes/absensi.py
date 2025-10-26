@@ -9,9 +9,12 @@ from app.models.mata_pelajaran import MataPelajaran
 from app.schemas.absensi import AbsensiCreate, AbsensiDetail
 from app.schemas.pagination import PaginatedResponse, PaginationMeta
 from app.utils.pagination import paginate_query
+from app.core.responses import EnvelopeAPIRoute
 
 
-router = APIRouter(prefix="/absensi", tags=["Absensi"])
+router = APIRouter(
+    prefix="/absensi", tags=["Absensi"], route_class=EnvelopeAPIRoute
+)
 
 
 def _get_sekolah_id(pengguna: Pengguna) -> str:
