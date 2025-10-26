@@ -1,5 +1,9 @@
 from app.models.pengguna import Pengguna, PeranPengguna
-from app.models.token import TokenVerifikasiEmail
+from app.models.token import (
+    TokenVerifikasiEmail,
+    TokenResetPassword,
+    RefreshToken,
+)
 from app.models.sekolah import Sekolah, JenjangSekolah, StatusSekolah
 from app.models.guru import Guru, StatusGuru
 from app.models.siswa import Siswa, StatusSiswa, SiswaKelas, StatusKeanggotaanKelas
@@ -35,6 +39,8 @@ __all__ = [
     "Pengguna",
     "PeranPengguna",
     "TokenVerifikasiEmail",
+    "TokenResetPassword",
+    "RefreshToken",
     "Sekolah",
     "JenjangSekolah",
     "StatusSekolah",

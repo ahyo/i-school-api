@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     app_env: str = "dev"
     secret_key: str
     access_token_expire_minutes: int = 120
+    refresh_token_expire_minutes: int = 60 * 24 * 7  # 7 hari
     database_url: str
     email_sender: str = "ahyo.haryanto@gmail.com"
     email_sender_name: str = "Sistem Sekolah Online"

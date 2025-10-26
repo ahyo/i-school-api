@@ -4,6 +4,9 @@ from app.schemas.auth import (
     PermintaanLogin,
     TokenResponse,
     PermintaanVerifikasiEmail,
+    PermintaanResetPassword,
+    ResetPasswordKonfirmasi,
+    RefreshTokenRequest,
 )
 from app.schemas.sekolah import SekolahDetail, SekolahUpdate
 from app.schemas.guru import GuruDetail, GuruCreate, GuruUpdate
@@ -74,6 +77,9 @@ __all__ = [
     "PermintaanLogin",
     "TokenResponse",
     "PermintaanVerifikasiEmail",
+    "PermintaanResetPassword",
+    "ResetPasswordKonfirmasi",
+    "RefreshTokenRequest",
     "SekolahDetail",
     "SekolahUpdate",
     "GuruDetail",

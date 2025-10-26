@@ -34,6 +34,7 @@ class PermintaanLogin(BaseModel):
 
 class TokenResponse(BaseModel):
     access_token: str
+    refresh_token: str
     token_type: str = "bearer"
 
 
@@ -51,3 +52,16 @@ class PenggunaProfile(BaseModel):
     sekolah_id: str | None
     status_aktif: bool
     guru_id: str | None = None
+
+
+class PermintaanResetPassword(BaseModel):
+    email: EmailStr
+
+
+class ResetPasswordKonfirmasi(BaseModel):
+    token: str = Field(..., max_length=255)
+    kata_sandi_baru: str = Field(..., min_length=8, max_length=72)
+
+
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str = Field(..., max_length=255)
