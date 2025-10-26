@@ -198,15 +198,12 @@ def perbarui_konten(
     return konten
 
 
-@router.delete(
-    "/konten/{konten_id}",
-    status_code=status.HTTP_204_NO_CONTENT,
-)
+@router.delete("/konten/{konten_id}", status_code=status.HTTP_200_OK)
 def hapus_konten(
     konten_id: str,
     db: Session = Depends(get_db),
     pengguna: Pengguna = Depends(require_peran(PeranPengguna.admin_sekolah)),
-) -> None:
+) -> dict[str, str]:
     konten = (
         db.query(WebsiteKonten)
         .filter(
@@ -220,6 +217,7 @@ def hapus_konten(
 
     db.delete(konten)
     db.commit()
+    return {"message": "Konten berhasil dihapus"}
 
 
 @router.get("/public/konten", response_model=PaginatedResponse[WebsiteKontenDetail])

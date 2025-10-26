@@ -9,6 +9,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, Response
 from fastapi.routing import APIRoute
+from fastapi.utils import DefaultPlaceholder
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from app.schemas.common import StandardResponse
 
@@ -57,7 +58,7 @@ class EnvelopeAPIRoute(APIRoute):
         response_model = kwargs.get("response_model")
         self.original_response_model = response_model
 
-        if response_model is None:
+        if response_model is None or isinstance(response_model, DefaultPlaceholder):
             kwargs["response_model"] = StandardResponse[Any]
         else:
             origin = getattr(response_model, "__origin__", None)
