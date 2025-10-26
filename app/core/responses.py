@@ -53,6 +53,12 @@ def extract_error_detail(detail: Any) -> Tuple[str, Any]:
     return DEFAULT_ERROR_MESSAGE, None
 
 
+def normalize_data_payload(data: Any) -> Any:
+    if isinstance(data, dict) and {"success", "message", "statusCode"}.issubset(data):
+        return normalize_data_payload(data.get("data"))
+    return data
+
+
 class EnvelopeAPIRoute(APIRoute):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         response_model = kwargs.get("response_model")
@@ -131,18 +137,25 @@ class EnvelopeAPIRoute(APIRoute):
 
             if isinstance(payload, dict):
                 if "success" in payload and "message" in payload:
-                    message = str(payload["message"])
-                    data = payload.get("data")
+                    message = str(payload.get("message", DEFAULT_SUCCESS_MESSAGE))
+                    data = normalize_data_payload(payload.get("data"))
                 else:
-                    pesan = payload.pop("pesan", None)
-                    message = str(payload.pop("message", pesan or DEFAULT_SUCCESS_MESSAGE))
-                    payload.pop("statusCode", None)
-                    if "data" in payload and len(payload) == 1:
-                        data = payload.get("data")
-                    elif "data" in payload and len(payload) > 1:
-                        data = payload
+                    payload_copy = dict(payload)
+                    pesan = payload_copy.pop("pesan", None)
+                    message = str(payload_copy.pop("message", pesan or DEFAULT_SUCCESS_MESSAGE))
+                    payload_copy.pop("statusCode", None)
+
+                    if "data" in payload_copy and len(payload_copy) == 1:
+                        data = normalize_data_payload(payload_copy.get("data"))
+                    elif "data" in payload_copy and len(payload_copy) > 1:
+                        base_data = payload_copy.pop("data")
+                        if isinstance(base_data, dict):
+                            merged = {**base_data, **payload_copy}
+                        else:
+                            merged = {"data": base_data, **payload_copy}
+                        data = normalize_data_payload(merged)
                     else:
-                        data = payload or None
+                        data = payload_copy or None
 
             wrapped_content = build_response_content(
                 success=True,
@@ -205,9 +218,10 @@ async def unhandled_exception_handler(
     request: Request, exc: Exception
 ) -> JSONResponse:
     logger.exception("Unhandled error during request", exc_info=exc)
+    exception_message = str(exc).strip() or DEFAULT_ERROR_MESSAGE
     content = build_response_content(
         success=False,
-        message=DEFAULT_ERROR_MESSAGE,
+        message=exception_message,
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         data=None,
     )
