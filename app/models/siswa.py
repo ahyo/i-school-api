@@ -76,6 +76,7 @@ class Siswa(Base):
     catatan = relationship(
         "CatatanSiswa", back_populates="siswa", cascade="all, delete-orphan"
     )
+    kelas_siswa = relationship("SiswaKelas", back_populates="siswa")
 
 
 class StatusKeanggotaanKelas(PyEnum):
@@ -98,7 +99,9 @@ class SiswaKelas(Base):
         String, ForeignKey("kelas.id", ondelete="CASCADE"), nullable=False
     )
     status_keanggotaan: Mapped[StatusKeanggotaanKelas] = mapped_column(
-        Enum(StatusKeanggotaanKelas, native_enum=False), nullable=False, default=StatusKeanggotaanKelas.aktif
+        Enum(StatusKeanggotaanKelas, native_enum=False),
+        nullable=False,
+        default=StatusKeanggotaanKelas.aktif,
     )
     tanggal_masuk: Mapped[date | None] = mapped_column(Date)
     tanggal_keluar: Mapped[date | None] = mapped_column(Date)
