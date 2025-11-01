@@ -45,6 +45,6 @@ class CatatanSiswa(Base):
         default=lambda: datetime.now(timezone.utc),
     )
 
-    siswa = relationship("Siswa", back_populates="catatan")
+    siswa = relationship("Siswa", back_populates="riwayat_catatan")
     pencatat = relationship("Pengguna", back_populates="catatan_dibuat")
     sekolah = relationship("Sekolah", back_populates="catatan_siswa")
