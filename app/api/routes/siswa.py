@@ -1,5 +1,6 @@
 from datetime import date
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, selectinload
 from app.core.deps import get_db, require_peran
 from app.models import Pengguna, PeranPengguna
@@ -20,6 +21,16 @@ def tambah_siswa(
     db: Session = Depends(get_db),
     pengguna: Pengguna = Depends(require_peran(PeranPengguna.admin_sekolah)),
 ) -> Siswa:
+    kelas: Kelas | None = None
+    if payload.kelas_id:
+        kelas = (
+            db.query(Kelas)
+            .filter(Kelas.id == payload.kelas_id, Kelas.sekolah_id == pengguna.sekolah_id)
+            .first()
+        )
+        if kelas is None:
+            raise HTTPException(status_code=404, detail="Kelas tidak ditemukan")
+
     siswa = Siswa(
         sekolah_id=pengguna.sekolah_id,
         nisn=payload.nisn,
@@ -40,16 +51,8 @@ def tambah_siswa(
         catatan=payload.catatan,
     )
     db.add(siswa)
-    db.flush()
 
-    if payload.kelas_id:
-        kelas = (
-            db.query(Kelas)
-            .filter(Kelas.id == payload.kelas_id, Kelas.sekolah_id == pengguna.sekolah_id)
-            .first()
-        )
-        if kelas is None:
-            raise HTTPException(status_code=404, detail="Kelas tidak ditemukan")
+    if kelas:
         siswa_kelas = SiswaKelas(
             siswa=siswa,
             kelas_id=kelas.id,
@@ -58,7 +61,15 @@ def tambah_siswa(
         )
         db.add(siswa_kelas)
 
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError as exc:
+        db.rollback()
+        constraint_name = getattr(getattr(exc.orig, "diag", None), "constraint_name", "")
+        if constraint_name == "uq_siswa_nisn":
+            raise HTTPException(status_code=409, detail="NISN sudah digunakan") from exc
+        raise HTTPException(status_code=400, detail="Gagal menambahkan siswa") from exc
+
     db.refresh(siswa)
     return siswa
 
