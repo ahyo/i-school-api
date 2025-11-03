@@ -2,6 +2,19 @@ from datetime import date, datetime
 from decimal import Decimal
 from pydantic import BaseModel, Field, ConfigDict
 from app.models.pembayaran import JenisPembayaran, StatusTagihan
+from app.models.pembayaran import StatusPembayaran
+from app.schemas.siswa import SiswaRingkas
+
+
+class PembayaranRingkas(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str
+    jenis_pembayaran: JenisPembayaran
+    jumlah: Decimal
+    status_pembayaran: StatusPembayaran
+    tanggal_bayar: date | None = None
+    tagihan_id: str | None = None
 
 
 class TagihanBase(BaseModel):
@@ -46,3 +59,5 @@ class TagihanDetail(TagihanBase):
     tanggal_tagihan: date
     dibuat_pada: datetime
     diperbarui_pada: datetime
+    siswa: SiswaRingkas
+    pembayaran: list[PembayaranRingkas] = Field(default_factory=list)

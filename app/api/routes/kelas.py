@@ -2,7 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session, selectinload
 from app.core.deps import get_db, require_peran
 from app.models import Pengguna, PeranPengguna
-from app.models.akademik import Kelas, TahunAjaran
+from app.models.akademik import Kelas, TahunAjaran, GuruMataPelajaran
+from app.models.guru import Guru
+from app.models.siswa import SiswaKelas
 from app.schemas.kelas import KelasCreate, KelasDetail, KelasUpdate
 from app.schemas.pagination import PaginatedResponse, PaginationMeta
 from app.utils.pagination import paginate_query
@@ -54,6 +56,17 @@ def daftar_kelas(
 ) -> PaginatedResponse[KelasDetail]:
     query = (
         db.query(Kelas)
+        .options(
+            selectinload(Kelas.tahun_ajaran),
+            selectinload(Kelas.wali_kelas).selectinload(Guru.pengguna),
+            selectinload(Kelas.anggota).selectinload(SiswaKelas.siswa),
+            selectinload(Kelas.relasi_mapel)
+            .selectinload(GuruMataPelajaran.guru)
+            .selectinload(Guru.pengguna),
+            selectinload(Kelas.relasi_mapel).selectinload(
+                GuruMataPelajaran.mata_pelajaran
+            ),
+        )
         .filter(Kelas.sekolah_id == pengguna.sekolah_id)
         .order_by(Kelas.tingkat.asc(), Kelas.nama_kelas.asc())
     )
@@ -77,7 +90,17 @@ def detail_kelas(
 ) -> Kelas:
     kelas = (
         db.query(Kelas)
-        .options(selectinload(Kelas.anggota))
+        .options(
+            selectinload(Kelas.tahun_ajaran),
+            selectinload(Kelas.wali_kelas).selectinload(Guru.pengguna),
+            selectinload(Kelas.anggota).selectinload(SiswaKelas.siswa),
+            selectinload(Kelas.relasi_mapel)
+            .selectinload(GuruMataPelajaran.guru)
+            .selectinload(Guru.pengguna),
+            selectinload(Kelas.relasi_mapel).selectinload(
+                GuruMataPelajaran.mata_pelajaran
+            ),
+        )
         .filter(Kelas.id == kelas_id, Kelas.sekolah_id == pengguna.sekolah_id)
         .first()
     )

@@ -1,11 +1,12 @@
 from datetime import date
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from app.core.deps import get_db, require_peran
 from app.models import Pengguna, PeranPengguna
 from app.models.akademik import AbsensiSiswa, Kelas
 from app.models.siswa import Siswa
 from app.models.mata_pelajaran import MataPelajaran
+from app.models.guru import Guru
 from app.schemas.absensi import AbsensiCreate, AbsensiDetail
 from app.schemas.pagination import PaginatedResponse, PaginationMeta
 from app.utils.pagination import paginate_query
@@ -98,7 +99,16 @@ def daftar_absensi(
     ),
 ) -> PaginatedResponse[AbsensiDetail]:
     sekolah_id = _get_sekolah_id(pengguna)
-    query = db.query(AbsensiSiswa).filter(AbsensiSiswa.sekolah_id == sekolah_id)
+    query = (
+        db.query(AbsensiSiswa)
+        .options(
+            selectinload(AbsensiSiswa.siswa),
+            selectinload(AbsensiSiswa.kelas),
+            selectinload(AbsensiSiswa.mata_pelajaran),
+            selectinload(AbsensiSiswa.dicatat_oleh).selectinload(Guru.pengguna),
+        )
+        .filter(AbsensiSiswa.sekolah_id == sekolah_id)
+    )
     if tanggal:
         query = query.filter(AbsensiSiswa.tanggal == tanggal)
     if siswa_id:
@@ -128,6 +138,12 @@ def detail_absensi(
 ) -> AbsensiSiswa:
     absensi = (
         db.query(AbsensiSiswa)
+        .options(
+            selectinload(AbsensiSiswa.siswa),
+            selectinload(AbsensiSiswa.kelas),
+            selectinload(AbsensiSiswa.mata_pelajaran),
+            selectinload(AbsensiSiswa.dicatat_oleh).selectinload(Guru.pengguna),
+        )
         .filter(
             AbsensiSiswa.id == absensi_id,
             AbsensiSiswa.sekolah_id == _get_sekolah_id(pengguna),

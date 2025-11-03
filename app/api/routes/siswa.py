@@ -84,7 +84,13 @@ def daftar_siswa(
 ) -> PaginatedResponse[SiswaDetail]:
     query = (
         db.query(Siswa)
-        .options(selectinload(Siswa.riwayat_kelas))
+        .options(
+            selectinload(Siswa.riwayat_kelas).selectinload(SiswaKelas.kelas),
+            selectinload(Siswa.tagihan),
+            selectinload(Siswa.pembayaran),
+            selectinload(Siswa.nilai),
+            selectinload(Siswa.absensi),
+        )
         .filter(Siswa.sekolah_id == pengguna.sekolah_id)
         .order_by(Siswa.nama_lengkap.asc())
     )
@@ -113,7 +119,13 @@ def detail_siswa(
 ) -> Siswa:
     siswa = (
         db.query(Siswa)
-        .options(selectinload(Siswa.riwayat_kelas))
+        .options(
+            selectinload(Siswa.riwayat_kelas).selectinload(SiswaKelas.kelas),
+            selectinload(Siswa.tagihan),
+            selectinload(Siswa.pembayaran),
+            selectinload(Siswa.nilai),
+            selectinload(Siswa.absensi),
+        )
         .filter(Siswa.id == siswa_id, Siswa.sekolah_id == pengguna.sekolah_id)
         .first()
     )
@@ -131,7 +143,13 @@ def ubah_siswa(
 ) -> Siswa:
     siswa = (
         db.query(Siswa)
-        .options(selectinload(Siswa.riwayat_kelas))
+        .options(
+            selectinload(Siswa.riwayat_kelas).selectinload(SiswaKelas.kelas),
+            selectinload(Siswa.tagihan),
+            selectinload(Siswa.pembayaran),
+            selectinload(Siswa.nilai),
+            selectinload(Siswa.absensi),
+        )
         .filter(Siswa.id == siswa_id, Siswa.sekolah_id == pengguna.sekolah_id)
         .first()
     )

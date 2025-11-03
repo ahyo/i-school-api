@@ -132,6 +132,10 @@ def daftar_pembayaran(
 ) -> PaginatedResponse[PembayaranDetail]:
     query = (
         db.query(Pembayaran)
+        .options(
+            selectinload(Pembayaran.siswa),
+            selectinload(Pembayaran.tagihan),
+        )
         .filter(Pembayaran.sekolah_id == _get_sekolah_id(pengguna))
         .order_by(Pembayaran.dicatat_pada.desc())
     )
@@ -159,7 +163,10 @@ def detail_pembayaran(
 ) -> Pembayaran:
     pembayaran = (
         db.query(Pembayaran)
-        .options(selectinload(Pembayaran.tagihan))
+        .options(
+            selectinload(Pembayaran.siswa),
+            selectinload(Pembayaran.tagihan),
+        )
         .filter(
             Pembayaran.id == pembayaran_id,
             Pembayaran.sekolah_id == _get_sekolah_id(pengguna),
@@ -182,7 +189,10 @@ def perbarui_status_pembayaran(
 ) -> Pembayaran:
     pembayaran = (
         db.query(Pembayaran)
-        .options(selectinload(Pembayaran.tagihan))
+        .options(
+            selectinload(Pembayaran.siswa),
+            selectinload(Pembayaran.tagihan),
+        )
         .filter(
             Pembayaran.id == pembayaran_id,
             Pembayaran.sekolah_id == _get_sekolah_id(pengguna),

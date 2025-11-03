@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from app.core.deps import get_db, require_peran
 from app.models import Pengguna, PeranPengguna
 from app.models.siswa import Siswa
@@ -118,7 +118,17 @@ def daftar_nilai(
     ),
 ) -> PaginatedResponse[NilaiDetail]:
     sekolah_id = _get_sekolah_id(pengguna)
-    query = db.query(Nilai).filter(Nilai.sekolah_id == sekolah_id)
+    query = (
+        db.query(Nilai)
+        .options(
+            selectinload(Nilai.siswa),
+            selectinload(Nilai.kelas),
+            selectinload(Nilai.mata_pelajaran),
+            selectinload(Nilai.guru).selectinload(Guru.pengguna),
+            selectinload(Nilai.tahun_ajaran),
+        )
+        .filter(Nilai.sekolah_id == sekolah_id)
+    )
     if siswa_id:
         query = query.filter(Nilai.siswa_id == siswa_id)
     if kelas_id:
@@ -148,6 +158,13 @@ def detail_nilai(
 ) -> Nilai:
     nilai = (
         db.query(Nilai)
+        .options(
+            selectinload(Nilai.siswa),
+            selectinload(Nilai.kelas),
+            selectinload(Nilai.mata_pelajaran),
+            selectinload(Nilai.guru).selectinload(Guru.pengguna),
+            selectinload(Nilai.tahun_ajaran),
+        )
         .filter(
             Nilai.id == nilai_id,
             Nilai.sekolah_id == _get_sekolah_id(pengguna),

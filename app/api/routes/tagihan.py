@@ -220,7 +220,10 @@ def daftar_tagihan(
 ) -> PaginatedResponse[TagihanDetail]:
     query = (
         db.query(Tagihan)
-        .options(selectinload(Tagihan.siswa))
+        .options(
+            selectinload(Tagihan.siswa),
+            selectinload(Tagihan.pembayaran),
+        )
         .filter(Tagihan.sekolah_id == _get_sekolah_id(pengguna))
     )
 
@@ -258,7 +261,10 @@ def detail_tagihan(
 ) -> Tagihan:
     tagihan = (
         db.query(Tagihan)
-        .options(selectinload(Tagihan.pembayaran))
+        .options(
+            selectinload(Tagihan.siswa),
+            selectinload(Tagihan.pembayaran),
+        )
         .filter(
             Tagihan.id == tagihan_id,
             Tagihan.sekolah_id == _get_sekolah_id(pengguna),
@@ -281,7 +287,10 @@ def perbarui_tagihan(
 ) -> Tagihan:
     tagihan = (
         db.query(Tagihan)
-        .options(selectinload(Tagihan.pembayaran))
+        .options(
+            selectinload(Tagihan.siswa),
+            selectinload(Tagihan.pembayaran),
+        )
         .filter(
             Tagihan.id == tagihan_id,
             Tagihan.sekolah_id == _get_sekolah_id(pengguna),
