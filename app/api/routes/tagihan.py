@@ -1,7 +1,7 @@
 import calendar
 from datetime import date, datetime
 from decimal import Decimal
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from sqlalchemy.orm import Session, selectinload
 from app.core.deps import get_db, require_peran
 from app.models import (
@@ -207,17 +207,27 @@ def generate_tagihan_spp(
 @router.get("", response_model=PaginatedResponse[TagihanDetail])
 def daftar_tagihan(
     status_tagihan: StatusTagihan | None = Query(default=None),
-    jenis: JenisPembayaran | None = Query(default=None),
+    jenis_tagihan: JenisPembayaran | None = Query(default=None, alias="jenis"),
     bulan: int | None = Query(default=None, ge=1, le=12),
     tahun: int | None = Query(default=None, ge=2000, le=2100),
     siswa_id: str | None = Query(default=None),
     page: int = Query(default=1, ge=1),
     limit: int = Query(default=20, ge=1, le=100),
+    request: Request,
     db: Session = Depends(get_db),
     pengguna: Pengguna = Depends(
         require_peran(PeranPengguna.admin_sekolah, PeranPengguna.keuangan)
     ),
 ) -> PaginatedResponse[TagihanDetail]:
+    if jenis_tagihan is None:
+        jenis_query = request.query_params.get("jenis_tagihan")
+        if jenis_query:
+            try:
+                jenis_tagihan = JenisPembayaran(jenis_query)
+            except ValueError as exc:
+                raise HTTPException(
+                    status_code=422, detail="Jenis tagihan tidak valid"
+                ) from exc
     query = (
         db.query(Tagihan)
         .options(
@@ -227,13 +237,13 @@ def daftar_tagihan(
         .filter(Tagihan.sekolah_id == _get_sekolah_id(pengguna))
     )
 
-    if status_tagihan:
+    if status_tagihan is not None:
         query = query.filter(Tagihan.status_tagihan == status_tagihan)
-    if jenis:
-        query = query.filter(Tagihan.jenis_tagihan == jenis)
-    if bulan:
+    if jenis_tagihan is not None:
+        query = query.filter(Tagihan.jenis_tagihan == jenis_tagihan)
+    if bulan is not None:
         query = query.filter(Tagihan.periode_bulan == bulan)
-    if tahun:
+    if tahun is not None:
         query = query.filter(Tagihan.periode_tahun == tahun)
     if siswa_id:
         query = query.filter(Tagihan.siswa_id == siswa_id)
