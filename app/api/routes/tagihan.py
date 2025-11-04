@@ -206,6 +206,7 @@ def generate_tagihan_spp(
 
 @router.get("", response_model=PaginatedResponse[TagihanDetail])
 def daftar_tagihan(
+    request: Request,
     status_tagihan: StatusTagihan | None = Query(default=None),
     jenis_tagihan: JenisPembayaran | None = Query(default=None, alias="jenis"),
     bulan: int | None = Query(default=None, ge=1, le=12),
@@ -213,7 +214,6 @@ def daftar_tagihan(
     siswa_id: str | None = Query(default=None),
     page: int = Query(default=1, ge=1),
     limit: int = Query(default=20, ge=1, le=100),
-    request: Request,
     db: Session = Depends(get_db),
     pengguna: Pengguna = Depends(
         require_peran(PeranPengguna.admin_sekolah, PeranPengguna.keuangan)
