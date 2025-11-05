@@ -140,7 +140,7 @@ def daftar_kenaikan(
 
     items, total, total_pages = paginate_query(query, page, limit)
     return PaginatedResponse[KenaikanKelasDetail](
-        data=items,
+        items=items,
         meta=PaginationMeta(
             page=page,
             limit=limit,

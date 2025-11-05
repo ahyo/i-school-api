@@ -68,7 +68,7 @@ def daftar_pendaftaran(
 
     items, total, total_pages = paginate_query(query, page, limit)
     return PaginatedResponse[PendaftaranSiswaDetail](
-        data=items,
+        items=items,
         meta=PaginationMeta(
             page=page,
             limit=limit,

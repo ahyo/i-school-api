@@ -101,7 +101,7 @@ def daftar_siswa(
         )
     items, total, total_pages = paginate_query(query, page, limit)
     return PaginatedResponse[SiswaDetail](
-        data=items,
+        items=items,
         meta=PaginationMeta(
             page=page,
             limit=limit,

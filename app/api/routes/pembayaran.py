@@ -143,7 +143,7 @@ def daftar_pembayaran(
         query = query.filter(Pembayaran.siswa_id == siswa_id)
     items, total, total_pages = paginate_query(query, page, limit)
     return PaginatedResponse[PembayaranDetail](
-        data=items,
+        items=items,
         meta=PaginationMeta(
             page=page,
             limit=limit,

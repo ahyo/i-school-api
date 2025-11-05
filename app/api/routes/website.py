@@ -116,7 +116,7 @@ def daftar_konten_admin(
     query = query.order_by(WebsiteKonten.dibuat_pada.desc())
     items, total, total_pages = paginate_query(query, page, limit)
     return PaginatedResponse[WebsiteKontenDetail](
-        data=items,
+        items=items,
         meta=PaginationMeta(
             page=page,
             limit=limit,
@@ -251,7 +251,7 @@ def daftar_konten_public(
 
     items, total, total_pages = paginate_query(query, page, limit)
     return PaginatedResponse[WebsiteKontenDetail](
-        data=items,
+        items=items,
         meta=PaginationMeta(
             page=page,
             limit=limit,

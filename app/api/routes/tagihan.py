@@ -251,7 +251,7 @@ def daftar_tagihan(
     query = query.order_by(Tagihan.tanggal_jatuh_tempo.asc())
     items, total, total_pages = paginate_query(query, page, limit)
     return PaginatedResponse[TagihanDetail](
-        data=items,
+        items=items,
         meta=PaginationMeta(
             page=page,
             limit=limit,

@@ -78,7 +78,7 @@ def daftar_guru(
     )
     items, total, total_pages = paginate_query(query, page, limit)
     return PaginatedResponse[GuruDetail](
-        data=items,
+        items=items,
         meta=PaginationMeta(
             page=page,
             limit=limit,

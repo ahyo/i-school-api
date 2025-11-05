@@ -138,7 +138,7 @@ def daftar_nilai(
     query = query.order_by(Nilai.tanggal_penilaian.desc())
     items, total, total_pages = paginate_query(query, page, limit)
     return PaginatedResponse[NilaiDetail](
-        data=items,
+        items=items,
         meta=PaginationMeta(
             page=page,
             limit=limit,

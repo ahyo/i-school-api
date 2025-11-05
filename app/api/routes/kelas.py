@@ -72,7 +72,7 @@ def daftar_kelas(
     )
     items, total, total_pages = paginate_query(query, page, limit)
     return PaginatedResponse[KelasDetail](
-        data=items,
+        items=items,
         meta=PaginationMeta(
             page=page,
             limit=limit,

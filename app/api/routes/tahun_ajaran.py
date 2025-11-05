@@ -66,7 +66,7 @@ def daftar_tahun_ajaran(
     )
     items, total, total_pages = paginate_query(query, page, limit)
     return PaginatedResponse[TahunAjaranDetail](
-        data=items,
+        items=items,
         meta=PaginationMeta(
             page=page,
             limit=limit,

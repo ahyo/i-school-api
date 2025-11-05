@@ -118,7 +118,7 @@ def daftar_absensi(
     query = query.order_by(AbsensiSiswa.tanggal.desc())
     items, total, total_pages = paginate_query(query, page, limit)
     return PaginatedResponse[AbsensiDetail](
-        data=items,
+        items=items,
         meta=PaginationMeta(
             page=page,
             limit=limit,

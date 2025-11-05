@@ -55,7 +55,7 @@ def daftar_mata_pelajaran(
     )
     items, total, total_pages = paginate_query(query, page, limit)
     return PaginatedResponse[MataPelajaranDetail](
-        data=items,
+        items=items,
         meta=PaginationMeta(
             page=page,
             limit=limit,

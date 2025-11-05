@@ -14,5 +14,5 @@ class PaginationMeta(BaseModel):
 
 
 class PaginatedResponse(GenericModel, Generic[T]):
-    data: Sequence[T]
+    items: Sequence[T]
     meta: PaginationMeta
